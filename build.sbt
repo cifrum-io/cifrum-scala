@@ -4,16 +4,22 @@ lazy val versions = new {
   lazy val jodaTime           = "2.10.3"
   lazy val xirr               = "0.1"
   lazy val scalaCsv           = "1.3.6"
+  lazy val junit              = "0.11"
 }
 
 lazy val dependencies = new {
+  // Scala libs
   val akkaHttp            = "com.typesafe.akka"             %% "akka-http"                    % versions.akkaHttpVersion
   val akkaStream          = "com.typesafe.akka"             %% "akka-stream"                  % versions.akkaVersion
   val akkaHttpJackson     = "com.typesafe.akka"             %% "akka-http-jackson"            % versions.akkaHttpVersion
   val scalaCsv            = "com.github.tototoshi"          %% "scala-csv"                    % versions.scalaCsv
 
+  // Java libs
   val jodaTime            = "joda-time"                     %  "joda-time"                    % versions.jodaTime
   val xirr                = "org.decampo"                   %  "xirr"                         % versions.xirr
+
+  // Test libs
+  val junit               = "com.novocode"                  %  "junit-interface"              % versions.junit
 }
 
 lazy val commonSettings = Seq(
@@ -57,7 +63,9 @@ lazy val core = project.in(file("core"))
       dependencies.scalaCsv
     ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
       dependencies.jodaTime,
-      dependencies.xirr
+      dependencies.xirr,
+
+      dependencies.junit % Test
     )
 
   )
