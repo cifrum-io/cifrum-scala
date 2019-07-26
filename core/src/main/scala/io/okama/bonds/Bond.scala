@@ -1,4 +1,5 @@
-package io.okama
+package io
+package okama
 package bonds
 
 import scala.util.Properties
@@ -14,9 +15,13 @@ enum MetasColumn(val name: String) {
 case class BondInfo(isin: String, name: String)
 
 class BondsMeta(val infos: Vector[BondInfo]) {
-  def exists(isin: String): Boolean = {
-    infos.exists { _.isin == isin }
+  def find(isin: String): Option[BondInfo] = {
+    infos.find { _.isin == isin }
   }
+}
+
+class Bond(val info: BondInfo) {
+  def yieldToMaturity: Double = 0.42
 }
 
 object Bond {
@@ -39,8 +44,8 @@ object Bond {
     BondsMeta(infos = bondInfos.toVector)
   }
 
-  def compute(isin: String): model.Bond = {
-    new model.Bond(isin, 0.42)
+  def find(isin: String): Option[Bond] = {
+    meta.find(isin).map { b => Bond(b) }
   }
 
 }

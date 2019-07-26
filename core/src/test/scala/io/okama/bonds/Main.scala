@@ -11,8 +11,8 @@ class BondsMeta_Test {
       BondInfo("isin2", "name2")
     ))
 
-    assertTrue(bondsMeta.exists("isin1"))
-    assertFalse(bondsMeta.exists("isin_absent"))
+    assertTrue(bondsMeta.find("isin1").isDefined)
+    assertTrue(bondsMeta.find("isin_absent").isEmpty)
   }
 }
 

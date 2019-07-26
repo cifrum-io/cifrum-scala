@@ -14,6 +14,7 @@ import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Flow;
 import io.okama.bonds.Bond;
 import io.okama.model.BondsMeta;
+import scala.Option;
 
 import java.util.concurrent.CompletionStage;
 
@@ -52,8 +53,8 @@ public class HttpServer extends AllDirectives {
                                         }),
 
                                         path(segment(), (String isin) -> {
-                                            io.okama.model.Bond bond = io.okama.bonds.Bond.compute(isin);
-                                            return completeOK(bond, Jackson.marshaller());
+                                            Option<Bond> bondOption = Bond.find(isin);
+                                            return completeOK(Converters.convert(bondOption), Jackson.marshaller());
                                         })
                                 )
                         )

@@ -5,22 +5,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Bond {
 
-    final String isin;
-    final double yieldToMaturity;
+    final boolean found;
+    final BondInfo info;
+    final BondActivities activities;
 
     @JsonCreator
-    public Bond(@JsonProperty() String isin,
-                @JsonProperty() double yieldToMaturity) {
-        this.isin = isin;
-        this.yieldToMaturity = yieldToMaturity;
+    public Bond(@JsonProperty() boolean found,
+                @JsonProperty() BondInfo info,
+                @JsonProperty() BondActivities activities) {
+        this.found = found;
+        this.info = info;
+        this.activities = activities;
     }
 
-    public String getIsin() {
-        return isin;
+    public boolean isFound() {
+        return found;
     }
 
-    public double getYieldToMaturity() {
-        return yieldToMaturity;
+    public BondInfo getInfo() {
+        return info;
+    }
+
+    public BondActivities getActivities() {
+        return activities;
     }
 
 }
