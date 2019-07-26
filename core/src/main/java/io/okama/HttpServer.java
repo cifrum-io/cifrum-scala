@@ -46,7 +46,7 @@ public class HttpServer extends AllDirectives {
                 get(() ->
                         pathPrefix("bonds", () ->
                                 concat(
-                                        path("meta", () -> {
+                                        path("", () -> {
                                             BondsMeta bondsMeta = Converters.convert(Bond.meta());
                                             return completeOK(bondsMeta, Jackson.marshaller());
                                         }),
