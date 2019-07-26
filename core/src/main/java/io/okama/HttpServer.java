@@ -12,6 +12,8 @@ import akka.http.javadsl.server.AllDirectives;
 import akka.http.javadsl.server.Route;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Flow;
+import io.okama.bonds.Bond;
+import io.okama.model.BondsMeta;
 
 import java.util.concurrent.CompletionStage;
 
@@ -43,10 +45,18 @@ public class HttpServer extends AllDirectives {
         return concat(
                 get(() ->
                         pathPrefix("bonds", () ->
-                                path(segment(), (String isin) -> {
-                                    io.okama.model.Bond bond = io.okama.bonds.Bond.compute(isin);
-                                    return completeOK(bond, Jackson.marshaller());
-                                }))
+                                concat(
+                                        path("meta", () -> {
+                                            BondsMeta bondsMeta = Converters.convert(Bond.meta());
+                                            return completeOK(bondsMeta, Jackson.marshaller());
+                                        }),
+
+                                        path(segment(), (String isin) -> {
+                                            io.okama.model.Bond bond = io.okama.bonds.Bond.compute(isin);
+                                            return completeOK(bond, Jackson.marshaller());
+                                        })
+                                )
+                        )
                 )
         );
     }
