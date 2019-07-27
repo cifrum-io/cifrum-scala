@@ -16,12 +16,17 @@ object Converters {
     m.BondInfo(bondInfo.isin, bondInfo.name)
   }
 
+  def convert(bondCoupon: BondCoupon): m.BondCoupon = {
+    m.BondCoupon(bondCoupon.date, bondCoupon.periodDays, bondCoupon.rate, bondCoupon.value)
+  }
+
   def convert(bondOption: Option[Bond]): m.Bond = {
     bondOption match {
       case None =>
         m.Bond(false, null, null)
       case Some(b) =>
-        val activities = m.BondActivities(b.yieldToMaturity)
+        val coupons = b.coupons.map { convert }.asJava
+        val activities = m.BondActivities(b.yieldToMaturity, coupons)
         m.Bond(true, convert(b.info), activities)
     }
   }
