@@ -20,13 +20,26 @@ object Converters {
     m.BondCoupon(bondCoupon.date, bondCoupon.periodDays, bondCoupon.rate, bondCoupon.value)
   }
 
+  def convert(yieldToMaturityOption: Option[BondYieldToMaturity]): m.BondYieldToMaturity = {
+    yieldToMaturityOption match {
+      case Some(yieldToMaturity) =>
+        m.BondYieldToMaturity(
+          yieldToMaturity.value,
+          yieldToMaturity.faceValue,
+          yieldToMaturity.price,
+          yieldToMaturity.buyDate)
+      case None => null
+    }
+  }
+
   def convert(bondOption: Option[Bond]): m.Bond = {
     bondOption match {
       case None =>
         m.Bond(false, null, null)
       case Some(b) =>
         val coupons = b.coupons.map { convert }.asJava
-        val activities = m.BondActivities(b.yieldToMaturity, coupons)
+        val ytm = convert(b.yieldToMaturity)
+        val activities = m.BondActivities(ytm, coupons)
         m.Bond(true, convert(b.info), activities)
     }
   }

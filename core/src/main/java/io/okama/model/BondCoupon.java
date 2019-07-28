@@ -11,7 +11,7 @@ public class BondCoupon {
   final int periodDays;
   final double rate;
   final double value;
-  DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
+  DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 
   @JsonCreator
   public BondCoupon(@JsonProperty() DateTime date,
@@ -25,7 +25,7 @@ public class BondCoupon {
   }
 
   public String getDate() {
-    return fmt.print(date);
+    return formatter.print(date);
   }
 
   public int getPeriodDays() {

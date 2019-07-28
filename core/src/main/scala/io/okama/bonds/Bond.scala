@@ -7,6 +7,9 @@ import java.nio.file._
 
 import com.github.tototoshi.csv.{CSVFormat, CSVReader, TSVFormat}
 import org.joda.{time => jt}
+import org.decampo.xirr
+
+import collection.JavaConverters._
 
 implicit val csvFormat: CSVFormat = new TSVFormat {}
 
@@ -33,8 +36,14 @@ class BondsMeta(val infos: Vector[BondInfo]) {
 
 case class BondCoupon(date: jt.DateTime, periodDays: Int, rate: Double, value: Double)
 
-class Bond(val info: BondInfo, dataDir: String) {
-  private val fmt = jt.format.DateTimeFormat.forPattern("dd.MM.yyyy")
+case class BondYieldToMaturity(value: Double, faceValue: Double, price: Double, buyDate: jt.DateTime)
+
+class Bond(val info: BondInfo,
+           val buyDate: jt.DateTime,
+           val price: Double,
+           val faceValue: Double)(dataDir: String) {
+
+  private val fmt = jt.format.DateTimeFormat.forPattern("dd.MM.yyyy").withZoneUTC()
 
   val coupons: Vector[BondCoupon] = {
     val path = Paths.get(dataDir, "bonds", s"${info.isin}.tsv")
@@ -49,7 +58,20 @@ class Bond(val info: BondInfo, dataDir: String) {
     coupons.toVector
   }
 
-  def yieldToMaturity: Double = 0.42
+  def yieldToMaturity: Option[BondYieldToMaturity] = {
+    val coupons1 = coupons.filter { _.date.isAfter(buyDate) }
+    if (coupons1.isEmpty) {
+      None
+    } else {
+      val buyTransaction = xirr.Transaction(-faceValue * price, buyDate.toDate)
+      val couponTransactions = coupons1.dropRight(1).map { c => xirr.Transaction(c.value, c.date.toDate) }
+      val finalTransaction = xirr.Transaction(coupons1.last.value + faceValue, coupons1.last.date.toDate)
+      val cashFlow = buyTransaction +: couponTransactions :+ finalTransaction
+      val rate = new xirr.Xirr(cashFlow.asJava)
+      val ytm = BondYieldToMaturity(value = rate.xirr, faceValue = faceValue, price = price, buyDate = buyDate)
+      Some(ytm)
+    }
+  }
 }
 
 object Bond {
@@ -73,8 +95,10 @@ object Bond {
     BondsMeta(infos = bondInfos.toVector)
   }
 
-  def find(isin: String): Option[Bond] = {
-    meta.find(isin).map { b => Bond(b, dataDir) }
+  def compute(isin: String, buyDate: jt.DateTime, price: Double, faceValue: Double): Option[Bond] = {
+    meta.find(isin).map { bi =>
+      Bond(bi, buyDate, price, faceValue)(dataDir)
+    }
   }
 
 }

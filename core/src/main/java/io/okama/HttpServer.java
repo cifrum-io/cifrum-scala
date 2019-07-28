@@ -10,10 +10,13 @@ import akka.http.javadsl.model.HttpRequest;
 import akka.http.javadsl.model.HttpResponse;
 import akka.http.javadsl.server.AllDirectives;
 import akka.http.javadsl.server.Route;
+import akka.http.javadsl.unmarshalling.StringUnmarshallers;
+import akka.http.javadsl.unmarshalling.Unmarshaller;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Flow;
 import io.okama.bonds.Bond;
 import io.okama.model.BondsMeta;
+import org.joda.time.DateTime;
 import scala.Option;
 
 import java.util.concurrent.CompletionStage;
@@ -21,6 +24,9 @@ import java.util.concurrent.CompletionStage;
 import static akka.http.javadsl.server.PathMatchers.segment;
 
 public class HttpServer extends AllDirectives {
+
+  private Unmarshaller<String, DateTime> dateTimeUnmarshaller =
+    Unmarshaller.sync((String dt) -> io.okama.model.Bond.formatter.parseDateTime(dt));
 
   public static void main(String[] args) throws Exception {
     ActorSystem system = ActorSystem.create("routes");
@@ -42,7 +48,6 @@ public class HttpServer extends AllDirectives {
   }
 
   private Route createRoute() {
-
     return concat(
       get(() ->
         pathPrefix("bonds", () ->
@@ -52,13 +57,12 @@ public class HttpServer extends AllDirectives {
               return completeOK(bondsMeta, Jackson.marshaller());
             }),
 
-            path(segment(), (String isin) -> {
-              Option<Bond> bondOption = Bond.find(isin);
-              return completeOK(Converters.convert(bondOption), Jackson.marshaller());
-            })
-          )
-        )
-      )
-    );
+            path(segment(), (String isin) ->
+              parameter(dateTimeUnmarshaller, "buyDate", (DateTime buyDate) ->
+                parameter(StringUnmarshallers.DOUBLE, "faceValue", (Double faceValue) ->
+                  parameter(StringUnmarshallers.DOUBLE, "price", (Double price) -> {
+                    Option<Bond> bondOption = Bond.compute(isin, buyDate, price, faceValue);
+                    return completeOK(Converters.convert(bondOption), Jackson.marshaller());
+                  }))))))));
   }
 }
