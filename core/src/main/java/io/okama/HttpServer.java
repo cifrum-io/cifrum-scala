@@ -22,43 +22,43 @@ import static akka.http.javadsl.server.PathMatchers.segment;
 
 public class HttpServer extends AllDirectives {
 
-    public static void main(String[] args) throws Exception {
-        ActorSystem system = ActorSystem.create("routes");
+  public static void main(String[] args) throws Exception {
+    ActorSystem system = ActorSystem.create("routes");
 
-        final Http http = Http.get(system);
-        final ActorMaterializer materializer = ActorMaterializer.create(system);
+    final Http http = Http.get(system);
+    final ActorMaterializer materializer = ActorMaterializer.create(system);
 
-        HttpServer app = new HttpServer();
+    HttpServer app = new HttpServer();
 
-        final Flow<HttpRequest, HttpResponse, NotUsed> routeFlow = app.createRoute().flow(system, materializer);
-        final CompletionStage<ServerBinding> binding = http.bindAndHandle(routeFlow,
-                ConnectHttp.toHost("localhost", 8080), materializer);
+    final Flow<HttpRequest, HttpResponse, NotUsed> routeFlow = app.createRoute().flow(system, materializer);
+    final CompletionStage<ServerBinding> binding = http.bindAndHandle(routeFlow,
+      ConnectHttp.toHost("localhost", 8080), materializer);
 
-        System.out.println("Server online at http://localhost:8080/\nPress RETURN to stop...");
-        System.in.read();
+    System.out.println("Server online at http://localhost:8080/\nPress RETURN to stop...");
+    System.in.read();
 
-        binding.thenCompose(ServerBinding::unbind)
-                .thenAccept(unbound -> system.terminate());
-    }
+    binding.thenCompose(ServerBinding::unbind)
+      .thenAccept(unbound -> system.terminate());
+  }
 
-    private Route createRoute() {
+  private Route createRoute() {
 
-        return concat(
-                get(() ->
-                        pathPrefix("bonds", () ->
-                                concat(
-                                        path("", () -> {
-                                            BondsMeta bondsMeta = Converters.convert(Bond.meta());
-                                            return completeOK(bondsMeta, Jackson.marshaller());
-                                        }),
+    return concat(
+      get(() ->
+        pathPrefix("bonds", () ->
+          concat(
+            path("", () -> {
+              BondsMeta bondsMeta = Converters.convert(Bond.meta());
+              return completeOK(bondsMeta, Jackson.marshaller());
+            }),
 
-                                        path(segment(), (String isin) -> {
-                                            Option<Bond> bondOption = Bond.find(isin);
-                                            return completeOK(Converters.convert(bondOption), Jackson.marshaller());
-                                        })
-                                )
-                        )
-                )
-        );
-    }
+            path(segment(), (String isin) -> {
+              Option<Bond> bondOption = Bond.find(isin);
+              return completeOK(Converters.convert(bondOption), Jackson.marshaller());
+            })
+          )
+        )
+      )
+    );
+  }
 }

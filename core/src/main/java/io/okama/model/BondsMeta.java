@@ -7,14 +7,14 @@ import java.util.List;
 
 public class BondsMeta {
 
-    final List<BondInfo> infos;
+  final List<BondInfo> infos;
 
-    @JsonCreator
-    public BondsMeta(@JsonProperty() List<BondInfo> infos) {
-        this.infos = infos;
-    }
+  @JsonCreator
+  public BondsMeta(@JsonProperty() List<BondInfo> infos) {
+    this.infos = infos;
+  }
 
-    public List<BondInfo> getInfos() {
-        return infos;
-    }
+  public List<BondInfo> getInfos() {
+    return infos;
+  }
 }

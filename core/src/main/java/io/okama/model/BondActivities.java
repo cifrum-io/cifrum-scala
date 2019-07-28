@@ -7,21 +7,21 @@ import java.util.List;
 
 public class BondActivities {
 
-    final double yieldToMaturity;
-    final List<BondCoupon> coupons;
+  final double yieldToMaturity;
+  final List<BondCoupon> coupons;
 
-    @JsonCreator
-    public BondActivities(@JsonProperty() double yieldToMaturity,
-                          @JsonProperty() List<BondCoupon> coupons) {
-        this.yieldToMaturity = yieldToMaturity;
-        this.coupons = coupons;
-    }
+  @JsonCreator
+  public BondActivities(@JsonProperty() double yieldToMaturity,
+                        @JsonProperty() List<BondCoupon> coupons) {
+    this.yieldToMaturity = yieldToMaturity;
+    this.coupons = coupons;
+  }
 
-    public double getYieldToMaturity() {
-        return yieldToMaturity;
-    }
+  public double getYieldToMaturity() {
+    return yieldToMaturity;
+  }
 
-    public List<BondCoupon> getCoupons() {
-        return coupons;
-    }
+  public List<BondCoupon> getCoupons() {
+    return coupons;
+  }
 }
