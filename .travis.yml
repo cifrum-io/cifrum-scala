@@ -1,0 +1,9 @@
+language: scala
+
+jdk:
+  - openjdk8
+
+script:
+  - sbt 'interface/test'
+  - sbt 'interface/publishLocal'
+  - sbt test
