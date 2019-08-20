@@ -4,6 +4,7 @@ lazy val versions = new {
   lazy val xirr               = "0.1"
   lazy val scalaCsv           = "1.3.6"
   lazy val junit              = "0.11"
+  lazy val scalaVerify        = "0.1.0"
 }
 
 lazy val dependencies = new {
@@ -22,7 +23,7 @@ lazy val dependencies = new {
   val xirr                = "org.decampo"                   %  "xirr"                         % versions.xirr
 
   // Test libs
-  val junit               = "com.novocode"                  %  "junit-interface"              % versions.junit
+  val scalaVerify         = "com.eed3si9n.verify"           %% "verify"                       % versions.scalaVerify % Test
 }
 
 lazy val commonSettings = Seq(
@@ -65,9 +66,10 @@ lazy val core = project.in(file("core"))
     ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
       dependencies.jodaTime,
       dependencies.xirr,
+      dependencies.scalaVerify
+    ),
 
-      dependencies.junit % Test
-    )
+    testFrameworks += new TestFramework("verify.runner.Framework")
   )
 
 lazy val interface = project.in(file("protobuf-interface"))
