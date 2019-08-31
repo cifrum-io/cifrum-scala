@@ -11,7 +11,6 @@ lazy val dependencies = new {
   // Dotty libs
   val yapo                = "io.okama"                      %% "yapo-protobuf-interface"      % versions.thisBuild
 
-
   // Scala libs
   val scalaCsv            = "com.github.tototoshi"          %% "scala-csv"                    % versions.scalaCsv
   val grpcNetty           = "io.grpc"                       %  "grpc-netty"                   % scalapb.compiler.Version.grpcJavaVersion
@@ -27,7 +26,6 @@ lazy val dependencies = new {
 }
 
 lazy val commonSettings = Seq(
-  name := "yapo",
   description := "Flexible and easy-to-use Scala 3 library for analysis & manipulation with financial & economic data",
   version := versions.thisBuild,
 
@@ -58,15 +56,17 @@ lazy val `yapo-root` = project.in(file("."))
 lazy val core = project.in(file("core"))
   .settings(commonSettings: _*)
   .settings(
+    name := "yapo-core",
+
     mainClass in (Compile, run) := Some("Runner"),
 
     libraryDependencies ++= Seq(
       dependencies.scalaCsv,
-      dependencies.yapo
+      dependencies.yapo,
     ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
       dependencies.jodaTime,
       dependencies.xirr,
-      dependencies.scalaVerify
+      dependencies.scalaVerify,
     ),
 
     testFrameworks += new TestFramework("verify.runner.Framework")
