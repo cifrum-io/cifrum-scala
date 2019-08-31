@@ -1,3 +1,5 @@
+package io.okama.grpc
+
 import scala.concurrent.ExecutionContext
 
 class ServiceImpl extends Service {
@@ -6,11 +8,11 @@ class ServiceImpl extends Service {
   }
 }
 
-object Runner {
+object GrpcRunner {
   def main(args: Array[String]): Unit = {
     val service = ServiceImpl()
     val server = HelloWorldServer(service, ExecutionContext.global)
-    server.start()
+    server.start("localhost", 50051)
     server.blockUntilShutdown()
   }
 }

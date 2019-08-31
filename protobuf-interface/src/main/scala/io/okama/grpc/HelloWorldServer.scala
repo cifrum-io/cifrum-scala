@@ -1,6 +1,8 @@
+package io.okama.grpc
+
 import java.util.logging.Logger
 
-import com.example.protos.hello.{GreeterGrpc, HelloReply, HelloRequest}
+import io.okama.protos.hello.{GreeterGrpc, HelloReply, HelloRequest}
 import io.grpc.{Server, ServerBuilder}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -11,24 +13,16 @@ trait Service {
 
 object HelloWorldServer {
   private val logger = Logger.getLogger(classOf[HelloWorldServer].getName)
-
-  private val port = 50051
 }
 
 class HelloWorldServer(service: Service, executionContext: ExecutionContext) {
   self =>
 
-  private[this] var server: Server = null
+  private[this] var server: Server = _
 
-  def start(): Unit = {
-    server = ServerBuilder.forPort(HelloWorldServer.port).addService(GreeterGrpc.bindService(new GreeterImpl, executionContext)).build.start
-    HelloWorldServer.logger.info("Server started, listening on " + HelloWorldServer.port)
-
-    System.in.read()
-
-    System.err.println("*** shutting down gRPC server since JVM is shutting down")
-    self.stop()
-    System.err.println("*** server shut down")
+  def start(host: String, port: Int): Unit = {
+    server = ServerBuilder.forPort(port).addService(GreeterGrpc.bindService(new GreeterImpl, executionContext)).build.start
+    HelloWorldServer.logger.info("Server started, listening on " + port)
   }
 
   def stop(): Unit = {
