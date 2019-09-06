@@ -33,12 +33,7 @@ object BondsGrpcTest extends TestSuite[GreeterGrpc.GreeterBlockingStub] {
 
   override def tearDownSuite(): Unit = {
     channel.shutdown()
-    def terminateChannel(): Unit = {
-      if (!channel.awaitTermination(10, TimeUnit.SECONDS)) {
-        terminateChannel()
-      }
-    }
-    terminateChannel()
+    channel.awaitTermination(30, TimeUnit.SECONDS)
 
     server.stop()
     server.blockUntilShutdown()
