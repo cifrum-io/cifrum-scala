@@ -9,7 +9,7 @@ lazy val versions = new {
 
 lazy val dependencies = new {
   // Dotty libs
-  val yapo                = "io.okama"                      %% "yapo-protobuf-interface"      % versions.thisBuild
+  val yapoInterface       = "io.okama"                      %% "yapo-protobuf-interface"      % versions.thisBuild
 
   // Scala libs
   val scalaCsv            = "com.github.tototoshi"          %% "scala-csv"                    % versions.scalaCsv
@@ -28,8 +28,7 @@ lazy val dependencies = new {
 lazy val commonSettings = Seq(
   description := "Flexible and easy-to-use Scala 3 library for analysis & manipulation with financial & economic data",
   version := versions.thisBuild,
-
-  scalaVersion := "0.17.0-RC1",
+  organization := "io.okama",
 
   homepage := Some(new URL("https://github.com/okama-io/yapo")),
   startYear := Some(2017),
@@ -57,12 +56,11 @@ lazy val core = project.in(file("core"))
   .settings(commonSettings: _*)
   .settings(
     name := "yapo-core",
-
-    mainClass in (Compile, run) := Some("Runner"),
+    scalaVersion := "0.17.0-RC1",
 
     libraryDependencies ++= Seq(
       dependencies.scalaCsv,
-      dependencies.yapo,
+      dependencies.yapoInterface,
     ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
       dependencies.jodaTime,
       dependencies.xirr,
@@ -76,7 +74,6 @@ lazy val interface = project.in(file("protobuf-interface"))
   .settings(
     scalaVersion := "2.12.9",
     name := "yapo-protobuf-interface",
-    organization := "io.okama",
 
     PB.targets in Compile := Seq(
       scalapb.gen() -> (sourceManaged in Compile).value
@@ -84,6 +81,6 @@ lazy val interface = project.in(file("protobuf-interface"))
 
     libraryDependencies ++= Seq(
       dependencies.grpcNetty,
-      dependencies.scalaPB
+      dependencies.scalaPB,
     )
   )
