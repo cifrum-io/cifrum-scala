@@ -71,6 +71,7 @@ lazy val core = project.in(file("core"))
   )
 
 lazy val interface = project.in(file("protobuf-interface"))
+  .settings(commonSettings: _*)
   .settings(
     scalaVersion := "2.12.9",
     name := "yapo-protobuf-interface",
