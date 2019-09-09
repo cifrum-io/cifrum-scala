@@ -1,9 +1,10 @@
 language: scala
-
 jdk:
-  - openjdk8
-
+- openjdk8
 script:
-  - sbt 'interface/test'
-  - sbt 'interface/publishLocal'
-  - sbt test
+- sbt 'interface/test'
+- sbt 'interface/publishLocal'
+- sbt test
+env:
+  global:
+    secure: 1UsS4Cn20mCQoMg8duW1NoGdndfhyhbWIEPncz9yZWLgdL8WeTXxrPSXMs5dWTaCmyvPf/ZIlP8NP2HErr1t++wxOR79ybAeQB5TEWZylMLU13SJJsQr/AdKu9BHIq+wspx7GJ83G5SqBNgR3Ws9Y+o37vFh/8rjCesdBvXRSFkluBcyn7jf7+0Re20uqzzDYGKaB4hg9/VS1ITQu0LZFjM87rLSOSuu2c8VqN+oxz2IAbUjALF5pw5JUTX2l6+Klhabp2K0cYRNMDurh/r2DrL6IWys5MjE7O1JCP6QPScHUI6h8KoUHM6Lf19L8IgIoGpzn27ehm5LpRCWElPTRFGd+TJBZT5bz4/7svOiJWaFYrbO2x5uknwJZ81w4RHiunUYkFPadfKwOixp7r2lMzb8TFXNiHTfJ7uLo274/MW6ypXIUY6u5om+olBNIE4Tu8JiRhOg5WuyZzc2jKggPJdwmJ4eLEoOCz8NjujHxxzn6WemEFe+5v/eujCN+DuIy254kuwfWbaYeEcYLvtW9DRLkTg0gYTjanBQW/IynJTAGEtk9oZZGdm0XkxM/ylgFyO5GNRn2/pwgR4GR+Rx4OkwnflAClEEVljoPA2+v/c+2bJfj3U6vyKbcMoNJFHkkCEylTSj3QFR2ztWjwuiKy7m2sPUfzxlSsdPsMbdGYQ=

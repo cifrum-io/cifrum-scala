@@ -1,10 +1,12 @@
 lazy val versions = new {
   lazy val thisBuild          = "0.1.0-SNAPSHOT"
   lazy val jodaTime           = "2.10.3"
+  lazy val jodaConvert        = "2.2.1"
   lazy val xirr               = "0.1"
   lazy val scalaCsv           = "1.3.6"
   lazy val junit              = "0.11"
   lazy val scalaVerify        = "0.1.0"
+  lazy val typesafeConfig     = "1.3.4"
 }
 
 lazy val dependencies = new {
@@ -15,9 +17,10 @@ lazy val dependencies = new {
   val scalaCsv            = "com.github.tototoshi"          %% "scala-csv"                    % versions.scalaCsv
   val grpcNetty           = "io.grpc"                       %  "grpc-netty"                   % scalapb.compiler.Version.grpcJavaVersion
   val scalaPB             = "com.thesamet.scalapb"          %% "scalapb-runtime-grpc"         % scalapb.compiler.Version.scalapbVersion
-
+  val typesafeConfig      = "com.typesafe"                  %  "config"                       % versions.typesafeConfig
 
   // Java libs
+  val jodaConvert         = "org.joda"                      %  "joda-convert"                 % versions.jodaConvert % Compile
   val jodaTime            = "joda-time"                     %  "joda-time"                    % versions.jodaTime
   val xirr                = "org.decampo"                   %  "xirr"                         % versions.xirr
 
@@ -63,6 +66,8 @@ lazy val core = project.in(file("core"))
       dependencies.yapoInterface,
     ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
       dependencies.jodaTime,
+      dependencies.jodaConvert,
+      dependencies.typesafeConfig,
       dependencies.xirr,
       dependencies.scalaVerify,
     ),
