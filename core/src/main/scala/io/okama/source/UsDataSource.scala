@@ -54,8 +54,8 @@ class UsDataSource() extends FinancialSymbolsSource(namespace="us") {
     symbolCodeToSymbolMap
   }
 
-  def getFinancialSymbol(name: String): Option[UsFinancialSymbol] = {
-    symbolCodeToSymbolMap.get(name)
+  def getFinancialSymbol(code: String): Option[UsFinancialSymbol] = {
+    symbolCodeToSymbolMap.get(code)
   }
 
 }

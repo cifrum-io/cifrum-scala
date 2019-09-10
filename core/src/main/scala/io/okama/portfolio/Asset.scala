@@ -2,6 +2,8 @@ package io.okama
 package portfolio
 
 import unit._
+import source._
+import javax.inject._
 
 class Asset(symbol: FinancialSymbol) {
 
@@ -15,6 +17,15 @@ class Asset(symbol: FinancialSymbol) {
 
 }
 
-object Asset {
-  def get(name: String): Asset = Asset(null)
+class Registry @Inject(usDataSource: UsDataSource) () {
+  def get(code: String): Option[Asset] = {
+    val Array(namespace, cod) = code.split("/")
+    namespace match {
+      case "us" =>
+        val symOpt = usDataSource.getFinancialSymbol(code=cod)
+        symOpt.map { sym => Asset(symbol=sym) }
+      case _ =>
+        None
+    }
+  }
 }

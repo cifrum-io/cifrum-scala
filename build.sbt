@@ -7,6 +7,7 @@ lazy val versions = new {
   lazy val junit              = "0.11"
   lazy val scalaVerify        = "0.1.0"
   lazy val typesafeConfig     = "1.3.4"
+  lazy val guice              = "4.2.2"
 }
 
 lazy val dependencies = new {
@@ -23,6 +24,7 @@ lazy val dependencies = new {
   val jodaConvert         = "org.joda"                      %  "joda-convert"                 % versions.jodaConvert % Compile
   val jodaTime            = "joda-time"                     %  "joda-time"                    % versions.jodaTime
   val xirr                = "org.decampo"                   %  "xirr"                         % versions.xirr
+  val guice               = "com.google.inject"             %  "guice"                        % versions.guice
 
   // Test libs
   val scalaVerify         = "com.eed3si9n.verify"           %% "verify"                       % versions.scalaVerify % Test
@@ -65,6 +67,7 @@ lazy val core = project.in(file("core"))
       dependencies.scalaCsv,
       dependencies.yapoInterface,
     ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
+      dependencies.guice,
       dependencies.jodaTime,
       dependencies.jodaConvert,
       dependencies.typesafeConfig,
