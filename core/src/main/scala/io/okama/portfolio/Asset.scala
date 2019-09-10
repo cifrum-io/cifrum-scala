@@ -9,6 +9,10 @@ class Asset(symbol: FinancialSymbol) {
     Vector(1, 2, 3)
   }
 
+  override def toString(): String = {
+    s"Asset(symobl=$symbol)"
+  }
+
 }
 
 object Asset {
