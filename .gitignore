@@ -7,6 +7,8 @@ target/
 .history
 .sbtserver
 .sbtserver/
+.dotty-ide-artifact
+.dotty-ide.json
 
 # IntelliJ
 .idea/
