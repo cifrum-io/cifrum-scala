@@ -8,7 +8,7 @@ import javax.inject._
 class Asset(symbol: FinancialSymbol) {
 
   def closeValues[T <: PeriodFrequency](slice: Slice[T], currency: Currency): Slice[T]#ResultType = {
-    Vector(1, 2, 3)
+    symbol.closeValues
   }
 
   override def toString(): String = {

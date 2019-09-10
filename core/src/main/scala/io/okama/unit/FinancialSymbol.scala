@@ -7,4 +7,5 @@ trait FinancialSymbol {
   val identifier: FinancialSymbolId
   val currency: Currency
   val periodFrequency: PeriodFrequency
+  def closeValues: Vector[Double]
 }
