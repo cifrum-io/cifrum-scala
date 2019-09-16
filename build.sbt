@@ -4,7 +4,6 @@ lazy val versions = new {
   lazy val jodaConvert        = "2.2.1"
   lazy val xirr               = "0.1"
   lazy val scalaCsv           = "1.3.6"
-  lazy val junit              = "0.11"
   lazy val scalaVerify        = "0.1.0"
   lazy val typesafeConfig     = "1.3.4"
   lazy val guice              = "4.2.2"
