@@ -1,6 +1,8 @@
 package io.okama
 package unit
 
+import timeseries._
+
 import org.joda.time.{convert => _, _}
 
 trait Slice[T <: PeriodFrequency] {
@@ -9,7 +11,7 @@ trait Slice[T <: PeriodFrequency] {
     case PeriodFrequency.Month.type => YearMonth
   }
 
-  type ResultType = Vector[Double]
+  type ResultType = TimeSeries
 
   val frequency: T
   val startDate: PeriodType

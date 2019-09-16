@@ -2,10 +2,13 @@ package io.okama
 package source
 
 import unit._
+import timeseries._
 
 import scala.io.Source
 import com.github.tototoshi.csv._
 import com.typesafe.config.ConfigFactory
+import java.time.format._
+import java.time.temporal._
 
 abstract class FinancialSymbolsSource(val namespace: String) {
   def getFinancialSymbol(name: String): Option[FinancialSymbol]
@@ -26,14 +29,10 @@ case class UsFinancialSymbol(
   kind: String,
 ) extends FinancialSymbol {
 
-  def closeValues: Vector[Double] = {
-    val path1 = dataUrl + path + "/" + code
-    val content = CSVReader.open(Source.fromURL(path1))(new TSVFormat{}).all
-    val result = content.tail.map { 
-      case List(time, value) => value.toDouble 
-      case _                 => ???
-    }
-    result.toVector
+  def closeValues: VectorMonthSeries = {
+    val url = dataUrl + path + "/" + code
+    val vms = VectorMonthSeries.fromCsv(url=url, dateColumn="period", valueColumn="close")
+    vms
   }
 
 }

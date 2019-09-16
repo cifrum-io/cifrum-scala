@@ -3,6 +3,8 @@ package portfolio
 
 import unit._
 import source._
+import timeseries._
+
 import javax.inject._
 
 class Asset(symbol: FinancialSymbol) {
