@@ -7,29 +7,24 @@ import org.joda.time.{convert => _, _}
 
 trait Slice[T <: PeriodFrequency] {
   type PeriodType = T match {
-    case PeriodFrequency.Day.type   => LocalDate
-    case PeriodFrequency.Month.type => YearMonth
+    case PeriodFrequency.Day   => LocalDate
+    case PeriodFrequency.Month => YearMonth
   }
 
-  type ResultType = TimeSeries
-
-  val frequency: T
   val startDate: PeriodType
   val endDate: PeriodType
 }
 
 object Slice {
-  def daily(startDate: LocalDate, endDate: LocalDate): Slice[PeriodFrequency.Day.type] = {
-    new Slice[PeriodFrequency.Day.type] {
-      val frequency = PeriodFrequency.Day
+  def daily(startDate: LocalDate, endDate: LocalDate): Slice[PeriodFrequency.Day] = {
+    new Slice[PeriodFrequency.Day] {
       val startDate = startDate
       val endDate = endDate
     }
   }
 
-  def monthly(startDate: YearMonth, endDate: YearMonth): Slice[PeriodFrequency.Month.type] = {
-    new Slice[PeriodFrequency.Month.type] {
-      val frequency = PeriodFrequency.Month
+  def monthly(startDate: YearMonth, endDate: YearMonth): Slice[PeriodFrequency.Month] = {
+    new Slice[PeriodFrequency.Month] {
       val startDate = startDate
       val endDate = endDate
     }

@@ -9,8 +9,12 @@ import javax.inject._
 
 class Asset(symbol: FinancialSymbol) {
 
-  def closeValues[T <: PeriodFrequency](slice: Slice[T], currency: Currency): Slice[T]#ResultType = {
-    symbol.closeValues
+  def closeValues[T <: PeriodFrequency](
+    slice: Slice[T], currency: Currency
+  ) given (periodFrequency: T): TimeSeriesResult[T] = {
+    val cv = symbol.closeValues
+    val result: TimeSeriesResult[T] = cv.as(periodFrequency)
+    result
   }
 
   override def toString(): String = {

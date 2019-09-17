@@ -4,7 +4,11 @@ package unit
 sealed trait PeriodFrequency 
 
 object PeriodFrequency {
-  case object Day     extends PeriodFrequency
-  case object Decade  extends PeriodFrequency
-  case object Month   extends PeriodFrequency
+  case class Day()     extends PeriodFrequency
+  case class Decade()  extends PeriodFrequency
+  case class Month()   extends PeriodFrequency
+
+  val day    = Day()
+  val decade = Decade()
+  val month  = Month()
 }

@@ -29,10 +29,10 @@ case class UsFinancialSymbol(
   kind: String,
 ) extends FinancialSymbol {
 
-  def closeValues: VectorMonthSeries = {
+  def closeValues: VectorEomSeries = {
     val url = dataUrl + path + "/" + code
-    val vms = VectorMonthSeries.fromCsv(url=url, dateColumn="period", valueColumn="close")
-    vms
+    val ves = VectorEomSeries.fromCsv(url=url, dateColumn="period", valueColumn="close")
+    ves
   }
 
 }
@@ -55,7 +55,7 @@ class UsDataSource() extends FinancialSymbolsSource(namespace="us") {
           code=code,
           name=name,
           currency=Currency.valueOf(currency),
-          periodFrequency=PeriodFrequency.Day,
+          periodFrequency=PeriodFrequency.day,
           country=country,
           exchange=exchange,
           kind=itemType,
