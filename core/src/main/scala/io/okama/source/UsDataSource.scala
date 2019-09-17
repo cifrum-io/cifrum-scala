@@ -10,10 +10,6 @@ import com.typesafe.config.ConfigFactory
 import java.time.format._
 import java.time.temporal._
 
-abstract class FinancialSymbolsSource(val namespace: String) {
-  def getFinancialSymbol(name: String): Option[FinancialSymbol]
-}
-
 private val conf = ConfigFactory.load()
 private val dataUrl = conf.getString("okama.data-url")
 private val path = conf.getString("okama.us-data-path")
