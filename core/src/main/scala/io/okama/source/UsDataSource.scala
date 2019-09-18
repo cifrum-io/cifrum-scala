@@ -10,10 +10,6 @@ import com.typesafe.config.ConfigFactory
 import java.time.format._
 import java.time.temporal._
 
-private val conf = ConfigFactory.load()
-private val dataUrl = conf.getString("okama.data-url")
-private val path = conf.getString("okama.us-data-path")
-
 case class UsFinancialSymbol(
   identifier: FinancialSymbolId,
   code: String,
@@ -26,9 +22,11 @@ case class UsFinancialSymbol(
 ) extends FinancialSymbol {
 
   def closeValues: VectorEomSeries = {
-    val url = dataUrl + path + "/" + code
-    val ves = VectorEomSeries.fromCsv(url=url, dateColumn="period", valueColumn="close")
-    ves
+    VectorEomSeries.fromCsv(
+      url=UsDataSource.closeValuesUrl(code), 
+      dateColumn="period", 
+      valueColumn="close",
+    )
   }
 
 }
@@ -36,8 +34,7 @@ case class UsFinancialSymbol(
 class UsDataSource() extends FinancialSymbolsSource(namespace="us") {
   private val symbolCodeToSymbolMap: Map[String, UsFinancialSymbol] = {
     val metaInfoStream = {
-      val url = dataUrl + path
-      CSVReader.open(Source.fromURL(url)).toStream
+      CSVReader.open(Source.fromURL(UsDataSource.metaInfoUrl)).toStream
     }
 
     val csvHeader = metaInfoStream.head
@@ -67,4 +64,14 @@ class UsDataSource() extends FinancialSymbolsSource(namespace="us") {
     symbolCodeToSymbolMap.get(code)
   }
 
+}
+
+object UsDataSource {
+  private val conf: com.typesafe.config.Config = ConfigFactory.load()
+  private val dataUrl: String = conf.getString("okama.data-url")
+  private val path: String = conf.getString("okama.us-data-path")
+
+  private val metaInfoUrl: String = dataUrl + path
+  private[source] def closeValuesUrl(code: String): String =
+    dataUrl + path + "/" + code
 }
