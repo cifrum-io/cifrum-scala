@@ -18,7 +18,17 @@ class VectorEodSeries(data: VectorEodDataType) extends TimeSeries {
     values.find((d, _) => d.equals(t)).map((_, v) => v)
   }
 
-  def as[T <: PeriodFrequency](frequency: T): TimeSeriesResult[T] = ???
+  def as[T <: PeriodFrequency](frequency: T): TimeSeriesResult[T] = {
+    val result = frequency match {
+      case PeriodFrequency.day =>
+        this
+      case PeriodFrequency.month =>
+        ???
+      case PeriodFrequency.decade =>
+        ???
+    }
+    result.asInstanceOf[TimeSeriesResult[T]]
+  }
 
   override def toString() = 
     values match {
