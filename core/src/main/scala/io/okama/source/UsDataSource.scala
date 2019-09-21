@@ -34,11 +34,13 @@ case class UsFinancialSymbol(
 class UsDataSource() extends FinancialSymbolsSource(namespace="us") {
   private val symbolCodeToSymbolMap: Map[String, UsFinancialSymbol] = {
     val metaInfoStream = {
-      CSVReader.open(Source.fromURL(UsDataSource.metaInfoUrl)).toStream
+      val source = Source.fromURL(UsDataSource.metaInfoUrl)
+      val csvReader = CSVReader.open(source)
+      csvReader.toStream
     }
 
     val csvHeader = metaInfoStream.head
-    assert(csvHeader == List("Code", "Name", "Country", "Exchange", "Currency", "Type"))
+    assert(csvHeader.toSet == Set("Code", "Name", "Country", "Exchange", "Currency", "Type"))
 
     val csvContent = metaInfoStream.tail
     val symbolCodeToSymbolMap = csvContent.foldLeft(Map.empty[String, UsFinancialSymbol]) {
