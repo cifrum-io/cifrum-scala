@@ -23,12 +23,18 @@ class Asset(symbol: FinancialSymbol) {
 
 }
 
-class Registry @Inject(usDataSource: UsDataSource) () {
+class Registry @Inject(
+  usDataSource: UsDataSource,
+  micexStockDataSource: MicexStockDataSource,
+) () {
   def get(code: String): Option[Asset] = {
     val Array(namespace, cod) = code.split("/")
     namespace match {
       case "us" =>
         val symOpt = usDataSource.getFinancialSymbol(code=cod)
+        symOpt.map { sym => Asset(symbol=sym) }
+      case "micex" =>
+        val symOpt = micexStockDataSource.getFinancialSymbol(code=cod)
         symOpt.map { sym => Asset(symbol=sym) }
       case _ =>
         None
