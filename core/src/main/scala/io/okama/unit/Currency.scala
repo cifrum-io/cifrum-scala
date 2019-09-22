@@ -2,5 +2,5 @@ package io.okama
 package unit
 
 enum Currency {
-  case RUB, USD, EUR
+  case RUB, USD, EUR, CNY
 }
