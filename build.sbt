@@ -4,17 +4,17 @@ lazy val versions = new {
   lazy val jodaConvert        = "2.2.1"
   lazy val xirr               = "0.1"
   lazy val scalaCsv           = "1.3.6"
-  lazy val scalaVerify        = "0.1.0"
+  lazy val scalaVerify        = "0.2.0+11-a21f4546"
   lazy val typesafeConfig     = "1.3.4"
   lazy val guice              = "4.2.2"
 }
 
 lazy val dependencies = new {
   // Dotty libs
-  val yapoInterface       = "io.okama"                      %% "yapo-protobuf-interface"      % versions.thisBuild
+  val yapoInterface       = "io.okama"                      %  "yapo-protobuf-interface_2.13" % versions.thisBuild
 
   // Scala libs
-  val scalaCsv            = "com.github.tototoshi"          %% "scala-csv"                    % versions.scalaCsv
+  val scalaCsv            = "com.github.tototoshi"          %  "scala-csv_2.13"               % versions.scalaCsv
   val grpcNetty           = "io.grpc"                       %  "grpc-netty"                   % scalapb.compiler.Version.grpcJavaVersion
   val scalaPB             = "com.thesamet.scalapb"          %% "scalapb-runtime-grpc"         % scalapb.compiler.Version.scalapbVersion
   val typesafeConfig      = "com.typesafe"                  %  "config"                       % versions.typesafeConfig
@@ -26,7 +26,7 @@ lazy val dependencies = new {
   val guice               = "com.google.inject"             %  "guice"                        % versions.guice
 
   // Test libs
-  val scalaVerify         = "com.eed3si9n.verify"           %% "verify"                       % versions.scalaVerify % Test
+  val scalaVerify         = "com.eed3si9n.verify"           %  "verify_0.19"                  % versions.scalaVerify % Test
 }
 
 lazy val commonSettings = Seq(
@@ -60,7 +60,7 @@ lazy val core = project.in(file("core"))
   .settings(commonSettings: _*)
   .settings(
     name := "yapo-core",
-    scalaVersion := "0.17.0-RC1",
+    scalaVersion := "0.19.0-RC1",
 
     libraryDependencies ++= Seq(
       dependencies.scalaCsv,
@@ -80,7 +80,7 @@ lazy val core = project.in(file("core"))
 lazy val interface = project.in(file("protobuf-interface"))
   .settings(commonSettings: _*)
   .settings(
-    scalaVersion := "2.12.9",
+    scalaVersion := "2.13.1",
     name := "yapo-protobuf-interface",
 
     PB.targets in Compile := Seq(
