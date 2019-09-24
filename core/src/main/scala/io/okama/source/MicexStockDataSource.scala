@@ -6,7 +6,7 @@ import timeseries._
 
 import scala.io.Source
 import com.github.tototoshi.csv._
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 import java.time.format._
 import java.time.temporal._
 
@@ -63,7 +63,7 @@ class MicexStockDataSource() extends FinancialSymbolsSource(namespace="micex") {
 }
 
 object MicexStockDataSource {
-  private val conf: com.typesafe.config.Config = ConfigFactory.load()
+  private val conf: Config = ConfigFactory.load()
   private val dataUrl: String = conf.getString("okama.data-url")
   private val path: String = conf.getString("okama.micex_stocks-data-path")
 
