@@ -1,6 +1,6 @@
 package io
 package okama
-package bonds
+package bond
 
 import scala.util.Properties
 import java.nio.file._
@@ -28,7 +28,7 @@ enum BondColumn(val name: String) {
 
 case class BondInfo(isin: String, name: String)
 
-class BondsMeta(val infos: Vector[BondInfo]) {
+class BondMeta(val infos: Vector[BondInfo]) {
   def find(isin: String): Option[BondInfo] = {
     infos.find { _.isin == isin }
   }
@@ -81,7 +81,7 @@ object Bond {
     dd.get
   }
 
-  val meta: BondsMeta = {
+  val meta: BondMeta = {
     val metaPath = Paths.get(dataDir, "bonds", "__meta.tsv")
     assert(Files.exists(metaPath), "Bonds meta must exist")
 
@@ -92,7 +92,7 @@ object Bond {
       BondInfo(isin = isin, name = name)
     }
 
-    BondsMeta(infos = bondInfos.toVector)
+    BondMeta(infos = bondInfos.toVector)
   }
 
   def compute(isin: String, buyDate: jt.DateTime, price: Double, faceValue: Double): Option[Bond] = {

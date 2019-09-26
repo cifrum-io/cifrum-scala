@@ -1,5 +1,5 @@
 package io.okama
-package bonds
+package bond
 
 import java.util.concurrent.TimeUnit
 
@@ -10,7 +10,7 @@ import grpc.{HelloWorldServer, ServiceImpl}
 
 import scala.concurrent.ExecutionContext
 
-object BondsGrpcTest extends TestSuite[GreeterGrpc.GreeterBlockingStub] {
+object BondGrpcTest extends TestSuite[GreeterGrpc.GreeterBlockingStub] {
   val host = "localhost"
   val port = 50051
   var server: HelloWorldServer = _
