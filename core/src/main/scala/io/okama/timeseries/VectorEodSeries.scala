@@ -7,20 +7,20 @@ import org.joda.time.{convert => _, _}
 import com.github.tototoshi.csv._
 import scala.io.Source
 
-type VectorEodDataType = Vector[(LocalDate, Double)]
-
-class VectorEodSeries(data: VectorEodDataType) extends TimeSeries {
+class VectorEodSeries[T](data: Vector[(LocalDate, T)]) extends TimeSeries[PeriodFrequency.Day, T] {
   type IndexType = LocalDate
-  type ValueType = Double
 
-  val values: VectorEodDataType = 
-    data.toVector.sortWith { case ((d1, _), (d2, _)) => d1.isBefore(d2) }
+  val frequency: PeriodFrequency = PeriodFrequency.day
 
-  def at(t: LocalDate): Option[Double] = {
-    values.find((d, _) => d.equals(t)).map((_, v) => v)
+  def values: Vector[T] = {
+    data.map(_._2)
   }
 
-  def as[T <: PeriodFrequency](frequency: T): TimeSeriesResult[T] = {
+  def at(t: LocalDate): Option[T] = {
+    data.find((d, _) => d.equals(t)).map((_, v) => v)
+  }
+
+  def as[V <: PeriodFrequency](frequency: V): TimeSeriesResult[V] = {
     val result = frequency match {
       case PeriodFrequency.day =>
         this
@@ -29,18 +29,33 @@ class VectorEodSeries(data: VectorEodDataType) extends TimeSeries {
       case PeriodFrequency.decade =>
         ???
     }
-    result.asInstanceOf[TimeSeriesResult[T]]
+    result.asInstanceOf[TimeSeriesResult[V]]
+  }
+
+  def index: TimeSeriesIndex = 
+    TimeSeriesIndex(frequency=PeriodFrequency.day, values=data.map(_._1))
+
+  def map[V](f: T => V): TimeSeries[PeriodFrequency.Day, V] = { 
+    val values1 = values.map(f)
+    val data1 = index.values.zip(values1)
+    VectorEodSeries[V](data1)
+  }
+
+  def zip[V](ts: TimeSeries[PeriodFrequency.Day, V]): TimeSeries[PeriodFrequency.Day, (T, V)] = {
+    val values1 = values.zip(ts.values)
+    val data1 = index.values.zip(values1)
+    VectorEodSeries(data1)
   }
 
   override def toString() = 
-    values match {
+    data match {
       case Vector() => "VectorEodSeries()"
-      case v        => s"VectorEodSeries(${v.head} .. ${v.last})"
+      case ds       => s"VectorEodSeries(${ds.head} .. ${ds.last})"
     }
 }
 
 object VectorEodSeries {
-  def fromCsv(url: String, dateColumn: String, valueColumn: String): VectorEodSeries = {
+  def fromCsv(url: String, dateColumn: String, valueColumn: String): VectorEodSeries[Double] = {
     val items = CSVReader.open(Source.fromURL(url))(new TSVFormat{}).allWithHeaders
     val data =
       for (item <- items) yield {
@@ -48,6 +63,7 @@ object VectorEodSeries {
         val v = item(valueColumn).toDouble
         (d, v)
       }
-    VectorEodSeries(data.toVector)
+    val dataSorted = data.toVector.sortWith { case ((d1, _), (d2, _)) => d1.isBefore(d2) }
+    VectorEodSeries[Double](dataSorted)
   }
 }

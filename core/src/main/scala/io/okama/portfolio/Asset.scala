@@ -7,14 +7,15 @@ import timeseries._
 
 import javax.inject._
 
-class Asset(symbol: FinancialSymbol) {
+class Asset[T <: PeriodFrequency, TS <: TimeSeries[T, Double], FT <: FinancialSymbol[T, TS]](
+  symbol: FT, currencyRegistry: CurrencyRegistry
+) {
 
-  def closeValues[T <: PeriodFrequency](
-    slice: Slice[T], currency: Currency
-  ) given (periodFrequency: T): TimeSeriesResult[T] = {
-    val cv = symbol.closeValues
-    val result: TimeSeriesResult[T] = cv.as(periodFrequency)
-    result
+  def closeValues[V <: PeriodFrequency](
+    slice: Slice[V], currency: Currency
+  ) (given periodFrequency: V): TimeSeriesResult[V] = {
+    val cvToCurrency = currencyRegistry.convert(series=symbol.closeValues, from=symbol.currency, to=currency)
+    cvToCurrency.as(periodFrequency)
   }
 
   override def toString(): String = {
@@ -26,16 +27,21 @@ class Asset(symbol: FinancialSymbol) {
 class Registry @Inject(
   usDataSource: UsDataSource,
   micexStockDataSource: MicexStockDataSource,
-) () {
-  def get(code: String): Option[Asset] = {
+  currencyRegistry: CurrencyRegistry,
+) {
+  def get(code: String): Option[Asset[_, _, _]] = {
     val Array(namespace, cod) = code.split("/")
     namespace match {
       case "us" =>
         val symOpt = usDataSource.getFinancialSymbol(code=cod)
-        symOpt.map { sym => Asset(symbol=sym) }
+        symOpt.map { sym => 
+          Asset[PeriodFrequency.Month, VectorEomSeries[Double], UsFinancialSymbol](symbol=sym, currencyRegistry=currencyRegistry) 
+        }
       case "micex" =>
         val symOpt = micexStockDataSource.getFinancialSymbol(code=cod)
-        symOpt.map { sym => Asset(symbol=sym) }
+        symOpt.map { sym => 
+          Asset[PeriodFrequency.Day, VectorEodSeries[Double], MicexStockFinancialSymbol](symbol=sym, currencyRegistry=currencyRegistry) 
+        }
       case _ =>
         None
     }

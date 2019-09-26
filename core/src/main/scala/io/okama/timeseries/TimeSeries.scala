@@ -8,14 +8,28 @@ import com.github.tototoshi.csv._
 import scala.io.Source
 
 type TimeSeriesResult[T <: PeriodFrequency] = T match {
-  case PeriodFrequency.Day   => VectorEodSeries
-  case PeriodFrequency.Month => VectorEomSeries
+  case PeriodFrequency.Day   => VectorEodSeries[Double]
+  case PeriodFrequency.Month => VectorEomSeries[Double]
 }
 
-trait TimeSeries {
-  type IndexType
-  type ValueType
+/**
+ * K - index type
+ * T - values type
+ */
+trait TimeSeries[K <: PeriodFrequency, T] {
+  val frequency: PeriodFrequency
+  type IndexType = K match {
+    case PeriodFrequency.Day   => LocalDate
+    case PeriodFrequency.Month => YearMonth
+  }
 
-  def at(t: IndexType): Option[ValueType]
+  case class TimeSeriesIndex(frequency: PeriodFrequency, values: Vector[IndexType])
+
+  def at(k: IndexType): Option[T]
   def as[T <: PeriodFrequency](frequency: T): TimeSeriesResult[T]
+  def index: TimeSeriesIndex
+  def values: Vector[T]
+
+  def map[V](f: T => V): TimeSeries[K, V]
+  def zip[V](ts: TimeSeries[K, V]): TimeSeries[K, (T, V)]
 }

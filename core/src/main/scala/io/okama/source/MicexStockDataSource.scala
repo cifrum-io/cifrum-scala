@@ -15,10 +15,9 @@ case class MicexStockFinancialSymbol(
   code: String,
   name: String,
   currency: Currency,
-  periodFrequency: PeriodFrequency,
-) extends FinancialSymbol {
+) extends FinancialSymbol[PeriodFrequency.Day, VectorEodSeries[Double]](periodFrequency=PeriodFrequency.day) {
 
-  def closeValues: VectorEodSeries = {
+  def closeValues: VectorEodSeries[Double] = {
     VectorEodSeries.fromCsv(
       url=MicexStockDataSource.closeValuesUrl(code), 
       dateColumn="date", 
@@ -28,7 +27,7 @@ case class MicexStockFinancialSymbol(
 
 }
 
-class MicexStockDataSource() extends FinancialSymbolsSource(namespace="micex") {
+class MicexStockDataSource() extends FinancialSymbolsSource[PeriodFrequency.Day, VectorEodSeries[Double], MicexStockFinancialSymbol](namespace="micex") {
   private val symbolCodeToSymbolMap: Map[String, MicexStockFinancialSymbol] = {
     val metaInfoStream = {
       val source = Source.fromURL(MicexStockDataSource.metaInfoUrl)
@@ -47,7 +46,6 @@ class MicexStockDataSource() extends FinancialSymbolsSource(namespace="micex") {
           code=code,
           name=shortName,
           currency=Currency.RUB,
-          periodFrequency=PeriodFrequency.day,
         )
         m + (code -> sym)
       case (m, _) => 

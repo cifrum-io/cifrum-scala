@@ -5,9 +5,8 @@ import timeseries._
 
 case class FinancialSymbolId(namespace: String, code: String)
 
-trait FinancialSymbol {
+trait FinancialSymbol[T <: PeriodFrequency, TS <: TimeSeries[T, Double]](val periodFrequency: T) {
   val identifier: FinancialSymbolId
   val currency: Currency
-  val periodFrequency: PeriodFrequency
-  def closeValues: TimeSeries
+  def closeValues: TS
 }

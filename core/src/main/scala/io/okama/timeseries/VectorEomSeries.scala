@@ -7,17 +7,17 @@ import org.joda.time.{convert => _, _}
 import com.github.tototoshi.csv._
 import scala.io.Source
 
-type VectorEomDataType = Vector[(YearMonth, Double)]
-
-class VectorEomSeries(data: VectorEomDataType) extends TimeSeries {
+class VectorEomSeries[T](data: Vector[(YearMonth, T)]) extends TimeSeries[PeriodFrequency.Month, T] {
   type IndexType = YearMonth
-  type ValueType = Double
 
-  val values: VectorEomDataType = 
-    data.toVector.sortWith { case ((d1, _), (d2, _)) => d1.isBefore(d2) }
+  val frequency: PeriodFrequency = PeriodFrequency.month
 
-  def at(t: YearMonth): Option[Double] = {
-    values.find((d, _) => d.equals(t)).map((_, v) => v)
+  def values: Vector[T] = {
+    data.map(_._2)
+  }
+
+  def at(t: YearMonth): Option[T] = {
+    data.find((d, _) => d.equals(t)).map((_, v) => v)
   }
 
   def as[T <: PeriodFrequency](frequency: T): TimeSeriesResult[T] = {
@@ -33,16 +33,32 @@ class VectorEomSeries(data: VectorEomDataType) extends TimeSeries {
     result.asInstanceOf[TimeSeriesResult[T]]
   }
 
-  override def toString(): String = 
-    values match {
+  def index: TimeSeriesIndex = 
+    TimeSeriesIndex(frequency=PeriodFrequency.month, values=data.map(_._1))
+  
+  def map[V](f: T => V): TimeSeries[PeriodFrequency.Month, V] = {
+    val values1 = values.map(f)
+    val data1 = index.values.zip(values1)
+    VectorEomSeries(data1)
+  }
+
+  def zip[V](ts: TimeSeries[PeriodFrequency.Month, V]): TimeSeries[PeriodFrequency.Month, (T, V)] = {
+    val values1 = values.zip(ts.values)
+    val data1 = index.values.zip(values1)
+    VectorEomSeries(data1)
+  }
+
+  override def toString(): String = {
+    data match {
       case Vector() => "VectorEomSeries()"
-      case v        => s"VectorEomSeries(${v.head} .. ${v.last})"
+      case ds       => s"VectorEomSeries(${ds.head} .. ${ds.last})"
     }
+  }
  
 }
 
 object VectorEomSeries {
-  def fromCsv(url: String, dateColumn: String, valueColumn: String): VectorEomSeries = {
+  def fromCsv(url: String, dateColumn: String, valueColumn: String): VectorEomSeries[Double] = {
     val items = CSVReader.open(Source.fromURL(url))(new TSVFormat{}).allWithHeaders
     val data = 
       for (item <- items) yield {
@@ -50,6 +66,7 @@ object VectorEomSeries {
         val v = item(valueColumn).toDouble
         (d, v)
       }
-    VectorEomSeries(data.toVector)
+    val dataSorted = data.toVector.sortWith { case ((d1, _), (d2, _)) => d1.isBefore(d2) }
+    VectorEomSeries[Double](dataSorted.toVector)
   }
 }
