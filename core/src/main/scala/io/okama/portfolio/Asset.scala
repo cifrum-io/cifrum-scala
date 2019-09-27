@@ -24,26 +24,43 @@ class Asset[T <: PeriodFrequency, TS <: TimeSeries[T, Double], FT <: FinancialSy
 
 }
 
+sealed trait AssetNamespace
+
+object AssetNamespace {
+  case class US()    extends AssetNamespace
+  case class MICEX() extends AssetNamespace
+
+  val us    = US()
+  val micex = MICEX()
+}
+
+type AssetUS    = Asset[PeriodFrequency.Month, VectorEomSeries[Double], UsFinancialSymbol]
+type AssetMICEX = Asset[PeriodFrequency.Day, VectorEodSeries[Double], MicexStockFinancialSymbol]
+
+type AssetType[T <: AssetNamespace] = T match {
+  case AssetNamespace.US    => AssetUS
+  case AssetNamespace.MICEX => AssetMICEX
+}
+
 class Registry @Inject(
   usDataSource: UsDataSource,
   micexStockDataSource: MicexStockDataSource,
   currencyRegistry: CurrencyRegistry,
 ) {
-  def get(code: String): Option[Asset[_, _, _]] = {
-    val Array(namespace, cod) = code.split("/")
+  def get[T <: AssetNamespace](namespace: T, code: String): Option[AssetType[T]] = {
     namespace match {
-      case "us" =>
-        val symOpt = usDataSource.getFinancialSymbol(code=cod)
+      case AssetNamespace.us =>
+        val symOpt = usDataSource.getFinancialSymbol(code=code)
         symOpt.map { sym => 
-          Asset[PeriodFrequency.Month, VectorEomSeries[Double], UsFinancialSymbol](symbol=sym, currencyRegistry=currencyRegistry) 
+          val res = AssetUS(symbol=sym, currencyRegistry=currencyRegistry) 
+          res.asInstanceOf[AssetType[T]]
         }
-      case "micex" =>
-        val symOpt = micexStockDataSource.getFinancialSymbol(code=cod)
+      case AssetNamespace.micex =>
+        val symOpt = micexStockDataSource.getFinancialSymbol(code=code)
         symOpt.map { sym => 
-          Asset[PeriodFrequency.Day, VectorEodSeries[Double], MicexStockFinancialSymbol](symbol=sym, currencyRegistry=currencyRegistry) 
+          val res = AssetMICEX(symbol=sym, currencyRegistry=currencyRegistry) 
+          res.asInstanceOf[AssetType[T]]
         }
-      case _ =>
-        None
     }
   }
 }
