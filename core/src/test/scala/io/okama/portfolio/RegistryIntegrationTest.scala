@@ -5,11 +5,7 @@ import com.google.inject.{Guice, AbstractModule}
 import portfolio.{AssetNamespace => ANS}
 import verify._
 
-class Module extends AbstractModule
-
-object RegistryIntegrationTest extends BasicTestSuite {
-  val injector = Guice.createInjector(Module())
-
+object RegistryIntegrationTest extends BasicTestSuite with Common {
   test("Registry.get") {
     val registry = injector.getInstance(classOf[portfolio.Registry])
     assert((registry.get(ANS.micex, "SBER"): Option[AssetMICEX]).isDefined)
