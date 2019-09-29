@@ -7,11 +7,6 @@ import org.joda.time.{convert => _, _}
 import com.github.tototoshi.csv._
 import scala.io.Source
 
-type TimeSeriesResult[T <: PeriodFrequency] = T match {
-  case PeriodFrequency.Day   => VectorEodSeries[Double]
-  case PeriodFrequency.Month => VectorEomSeries[Double]
-}
-
 /**
  * K - index type
  * T - values type
@@ -33,3 +28,6 @@ trait TimeSeries[K <: PeriodFrequency, T] {
   def map[V](f: T => V): TimeSeries[K, V]
   def zip[V](ts: TimeSeries[K, V]): TimeSeries[K, (T, V)]
 }
+
+type TimeSeriesDay[T]   = TimeSeries[PeriodFrequency.Day, T]
+type TimeSeriesMonth[T] = TimeSeries[PeriodFrequency.Month, T]

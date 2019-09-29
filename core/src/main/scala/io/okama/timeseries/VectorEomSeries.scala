@@ -7,7 +7,7 @@ import org.joda.time.{convert => _, _}
 import com.github.tototoshi.csv._
 import scala.io.Source
 
-class VectorEomSeries[T](data: Vector[(YearMonth, T)]) extends TimeSeries[PeriodFrequency.Month, T] {
+class VectorEomSeries[T](data: Vector[(YearMonth, T)]) extends TimeSeriesMonth[T] {
   type IndexType = YearMonth
 
   val frequency: PeriodFrequency = PeriodFrequency.month
@@ -20,7 +20,7 @@ class VectorEomSeries[T](data: Vector[(YearMonth, T)]) extends TimeSeries[Period
     data.find((d, _) => d.equals(t)).map((_, v) => v)
   }
 
-  def as[T <: PeriodFrequency](frequency: T): TimeSeriesResult[T] = {
+  def as[V <: PeriodFrequency](frequency: V): TimeSeries[V, T] = {
     val result = frequency match {
       case PeriodFrequency.day => 
         val data = Vector((LocalDate.parse("2019-1-1"), 10.1))
@@ -30,7 +30,7 @@ class VectorEomSeries[T](data: Vector[(YearMonth, T)]) extends TimeSeries[Period
       case PeriodFrequency.decade =>
         ???
     }
-    result.asInstanceOf[TimeSeriesResult[T]]
+    result.asInstanceOf[TimeSeries[V, T]]
   }
 
   def index: TimeSeriesIndex = 
