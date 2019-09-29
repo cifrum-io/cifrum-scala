@@ -17,16 +17,18 @@ trait Slice[T <: PeriodFrequency] {
 
 object Slice {
   def daily(startDate: LocalDate, endDate: LocalDate): Slice[PeriodFrequency.Day] = {
+    val (sd, ed) = (startDate, endDate)
     new Slice[PeriodFrequency.Day] {
-      val startDate = startDate
-      val endDate = endDate
+      val startDate = sd
+      val endDate = ed
     }
   }
 
   def monthly(startDate: YearMonth, endDate: YearMonth): Slice[PeriodFrequency.Month] = {
+    val (sd, ed) = (startDate, endDate)
     new Slice[PeriodFrequency.Month] {
-      val startDate = startDate
-      val endDate = endDate
+      val startDate = sd
+      val endDate = ed
     }
   }
 }
