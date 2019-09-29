@@ -1,6 +1,9 @@
 package io.okama
 package unit
 
+given periodFrequencyDay: PeriodFrequency.Day     = PeriodFrequency.day
+given periodFrequencyMonth: PeriodFrequency.Month = PeriodFrequency.month
+
 sealed trait PeriodFrequency 
 
 object PeriodFrequency {
