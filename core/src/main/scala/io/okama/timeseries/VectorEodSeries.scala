@@ -47,6 +47,11 @@ class VectorEodSeries[T](data: Vector[(LocalDate, T)]) extends TimeSeriesDay[T] 
     VectorEodSeries(data1)
   }
 
+  def filterIndex(f: IndexType => Boolean): TimeSeries[PeriodFrequency.Day, T] = {
+    val data1 = data.filter((d, _) => f(d))
+    VectorEodSeries(data1)
+  }
+
   override def toString() = 
     data match {
       case Vector() => "VectorEodSeries()"

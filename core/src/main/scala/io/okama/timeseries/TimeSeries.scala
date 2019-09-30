@@ -13,7 +13,7 @@ import scala.io.Source
  */
 trait TimeSeries[K <: PeriodFrequency, T] {
   val frequency: PeriodFrequency
-  type IndexType = K match {
+  type IndexType <: org.joda.time.base.AbstractPartial = K match {
     case PeriodFrequency.Day   => LocalDate
     case PeriodFrequency.Month => YearMonth
   }
@@ -27,6 +27,7 @@ trait TimeSeries[K <: PeriodFrequency, T] {
 
   def map[V](f: T => V): TimeSeries[K, V]
   def zip[V](ts: TimeSeries[K, V]): TimeSeries[K, (T, V)]
+  def filterIndex(f: IndexType => Boolean): TimeSeries[K, T]
 }
 
 type TimeSeriesDay[T]   = TimeSeries[PeriodFrequency.Day, T]

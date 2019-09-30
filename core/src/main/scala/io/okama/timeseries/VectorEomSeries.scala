@@ -48,6 +48,11 @@ class VectorEomSeries[T](data: Vector[(YearMonth, T)]) extends TimeSeriesMonth[T
     VectorEomSeries(data1)
   }
 
+  def filterIndex(f: IndexType => Boolean): TimeSeries[PeriodFrequency.Month, T] = {
+    val data1 = data.filter((d, _) => f(d))
+    VectorEomSeries(data1)
+  }
+
   override def toString(): String = {
     data match {
       case Vector() => "VectorEomSeries()"
