@@ -45,7 +45,7 @@ class MicexStockDataSource() extends FinancialSymbolsSource[PeriodFrequency.Day,
           identifier=FinancialSymbolId(namespace=namespace, code=code),
           code=code,
           name=shortName,
-          currency=Currency.RUB,
+          currency=Currency.rub,
         )
         m + (code -> sym)
       case (m, _) => 
