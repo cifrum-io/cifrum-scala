@@ -21,7 +21,7 @@ trait TimeSeries[K <: PeriodFrequency, T] {
   case class TimeSeriesIndex(frequency: PeriodFrequency, values: Vector[IndexType])
 
   def at(k: IndexType): Option[T]
-  def as[T <: PeriodFrequency](frequency: T): TimeSeriesResult[T]
+  def as[V <: PeriodFrequency](frequency: V): TimeSeries[V, T]
   def index: TimeSeriesIndex
   def values: Vector[T]
 

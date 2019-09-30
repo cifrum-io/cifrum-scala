@@ -8,7 +8,8 @@ import timeseries._
 import javax.inject._
 
 class Asset[T <: PeriodFrequency, TS <: TimeSeries[T, Double], FT <: FinancialSymbol[T, TS]](
-  symbol: FT, currencyRegistry: CurrencyRegistry
+  val symbol: FT, 
+  currencyRegistry: CurrencyRegistry
 ) {
 
   def closeValues[V <: PeriodFrequency](
