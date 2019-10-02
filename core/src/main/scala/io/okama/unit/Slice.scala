@@ -6,7 +6,7 @@ import timeseries._
 import org.joda.time.{convert => _, _}
 
 trait Slice[T <: PeriodFrequency] {
-  type PeriodType = T match {
+  type PeriodType <: org.joda.time.base.AbstractPartial = T match {
     case PeriodFrequency.Day   => LocalDate
     case PeriodFrequency.Month => YearMonth
   }
