@@ -1,24 +1,26 @@
 package io.okama
 package unit
 
-sealed trait Currency derives Eql
+sealed trait Currency derives Eql {
+  val name: String
+}
 
 object Currency {
-  case class RUB() extends Currency
-  case class USD() extends Currency
-  case class EUR() extends Currency
-  case class CNY() extends Currency
+  case class RUB(name: String) extends Currency
+  case class USD(name: String) extends Currency
+  case class EUR(name: String) extends Currency
+  case class CNY(name: String) extends Currency
 
-  val rub = RUB()
-  val usd = USD()
-  val eur = EUR()
-  val cny = CNY()
+  val rub = RUB(name="RUB")
+  val usd = USD(name="USD")
+  val eur = EUR(name="EUR")
+  val cny = CNY(name="CNY")
 
-  def valueOf(v: String) = v.toLowerCase match {
-    case "rub" => rub
-    case "usd" => usd
-    case "eur" => eur
-    case "cny" => cny
-    case _     => ???
+  def valueOf(v: String) = v.toUpperCase match {
+    case rub.name => rub
+    case usd.name => usd
+    case eur.name => eur
+    case cny.name => cny
+    case _        => ???
   }
 }
