@@ -4,7 +4,7 @@ package unit
 given periodFrequencyDay: PeriodFrequency.Day     = PeriodFrequency.day
 given periodFrequencyMonth: PeriodFrequency.Month = PeriodFrequency.month
 
-sealed trait PeriodFrequency 
+sealed trait PeriodFrequency derives Eql
 
 object PeriodFrequency {
   case class Day()     extends PeriodFrequency
