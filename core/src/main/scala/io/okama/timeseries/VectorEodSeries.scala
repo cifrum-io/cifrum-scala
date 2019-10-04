@@ -54,8 +54,13 @@ class VectorEodSeries[T](data: Vector[(LocalDate, T)]) extends TimeSeriesDay[T] 
 
   override def toString() = 
     data match {
-      case Vector() => "VectorEodSeries()"
-      case ds       => s"VectorEodSeries(${ds.head} .. ${ds.last})"
+      case Vector() => "VectorEodSeries(empty)"
+      case ds       => 
+        if (ds.size < 7) {
+          s"VectorEodSeries(${ds.size} items: ${ds.mkString(", ")})"
+        } else {
+          s"VectorEodSeries(${ds.size} items: ${ds.take(3).mkString(", ")} .. ${ds.takeRight(3).mkString(", ")})"
+        }
     }
 }
 

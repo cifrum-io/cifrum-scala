@@ -55,8 +55,13 @@ class VectorEomSeries[T](data: Vector[(YearMonth, T)]) extends TimeSeriesMonth[T
 
   override def toString(): String = {
     data match {
-      case Vector() => "VectorEomSeries()"
-      case ds       => s"VectorEomSeries(${ds.head} .. ${ds.last})"
+      case Vector() => "VectorEomSeries(empty)"
+      case ds       => 
+        if (ds.size < 7) {
+          s"VectorEomSeries(${ds.size} items: ${ds.mkString(", ")})"
+        } else {
+          s"VectorEomSeries(${ds.size} items: ${ds.take(3).mkString(", ")} .. ${ds.takeRight(3).mkString(", ")})"
+        }
     }
   }
  
