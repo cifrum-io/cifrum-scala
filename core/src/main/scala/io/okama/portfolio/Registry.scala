@@ -17,8 +17,8 @@ object AssetNamespace {
   val micex = MICEX()
 }
 
-type AssetUS    = Asset[PeriodFrequency.Month, VectorEomSeries[Double], UsFinancialSymbol]
-type AssetMICEX = Asset[PeriodFrequency.Day, VectorEodSeries[Double], MicexStockFinancialSymbol]
+type AssetUS    = Asset[PeriodFrequency.Month, TimeSeriesMonth[Double], UsFinancialSymbol]
+type AssetMICEX = Asset[PeriodFrequency.Day, TimeSeriesDay[Double], MicexStockFinancialSymbol]
 
 type AssetType[T <: AssetNamespace] = T match {
   case AssetNamespace.US    => AssetUS

@@ -14,11 +14,12 @@ case class CbrCurrencyRatesFinancialSymbol(
   identifier: FinancialSymbolId,
   targetCurrency: Currency,
   currency: Currency,
-) extends FinancialSymbol[PeriodFrequency.Day, VectorEodSeries[Double]](periodFrequency=PeriodFrequency.day) {
+) extends FinancialSymbol[PeriodFrequency.Day, TimeSeriesDay[Double]](periodFrequency=PeriodFrequency.day) {
 
-  def closeValues: VectorEodSeries[Double] = {
+  def closeValues: TimeSeriesDay[Double] = {
+    val url = CbrCurrencyRatesSource.closeValuesUrl(s"${targetCurrency.name}-${currency.name}")
     VectorEodSeries.fromCsv(
-      url=CbrCurrencyRatesSource.closeValuesUrl(s"$currency-$targetCurrency"), 
+      url=url, 
       dateColumn="date", 
       valueColumn="close",
     )
@@ -26,7 +27,7 @@ case class CbrCurrencyRatesFinancialSymbol(
 
 }
 
-class CbrCurrencyRatesSource() extends FinancialSymbolsSource[PeriodFrequency.Day, VectorEodSeries[Double], CbrCurrencyRatesFinancialSymbol](namespace="cbr") {
+class CbrCurrencyRatesSource() extends FinancialSymbolsSource[PeriodFrequency.Day, TimeSeriesDay[Double], CbrCurrencyRatesFinancialSymbol](namespace="cbr") {
   private val symbolCodeToSymbolMap: Map[String, CbrCurrencyRatesFinancialSymbol] = {
     val metaInfoStream = {
       val source = Source.fromURL(CbrCurrencyRatesSource.metaInfoUrl)

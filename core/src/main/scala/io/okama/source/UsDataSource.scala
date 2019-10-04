@@ -18,7 +18,7 @@ case class UsFinancialSymbol(
   country: String,
   exchange: String,
   kind: String,
-) extends FinancialSymbol[PeriodFrequency.Month, VectorEomSeries[Double]](periodFrequency=PeriodFrequency.month) {
+) extends FinancialSymbol[PeriodFrequency.Month, TimeSeriesMonth[Double]](periodFrequency=PeriodFrequency.month) {
 
   def closeValues: VectorEomSeries[Double] = {
     VectorEomSeries.fromCsv(
@@ -30,7 +30,7 @@ case class UsFinancialSymbol(
 
 }
 
-class UsDataSource() extends FinancialSymbolsSource[PeriodFrequency.Month, VectorEomSeries[Double], UsFinancialSymbol](namespace="us") {
+class UsDataSource() extends FinancialSymbolsSource[PeriodFrequency.Month, TimeSeriesMonth[Double], UsFinancialSymbol](namespace="us") {
   private val symbolCodeToSymbolMap: Map[String, UsFinancialSymbol] = {
     val metaInfoStream = {
       val source = Source.fromURL(UsDataSource.metaInfoUrl)
