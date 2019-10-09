@@ -8,15 +8,13 @@ import com.github.tototoshi.csv._
 import scala.io.Source
 
 class VectorEomSeries[T](data: Vector[(YearMonth, T)]) extends TimeSeriesMonth[T] {
-  type IndexType = YearMonth
-
   val frequency: PeriodFrequency = PeriodFrequency.month
 
   def values: Vector[T] = {
     data.map(_._2)
   }
 
-  def at(t: YearMonth): Option[T] = {
+  def at(t: I): Option[T] = {
     data.find((d, _) => d.equals(t)).map((_, v) => v)
   }
 
@@ -33,7 +31,7 @@ class VectorEomSeries[T](data: Vector[(YearMonth, T)]) extends TimeSeriesMonth[T
     result.asInstanceOf[TimeSeries[V, T]]
   }
 
-  def index: TimeSeriesIndex = 
+  def index: TimeSeriesIndex[PeriodFrequency.Month] = 
     TimeSeriesIndex(frequency=PeriodFrequency.month, values=data.map(_._1))
   
   def map[V](f: T => V): TimeSeries[PeriodFrequency.Month, V] = {
@@ -43,12 +41,13 @@ class VectorEomSeries[T](data: Vector[(YearMonth, T)]) extends TimeSeriesMonth[T
   }
 
   def zip[V](ts: TimeSeries[PeriodFrequency.Month, V]): TimeSeries[PeriodFrequency.Month, (T, V)] = {
+    assert(index.eql(ts.index))
     val values1 = values.zip(ts.values)
     val data1 = index.values.zip(values1)
     VectorEomSeries(data1)
   }
 
-  def filterIndex(f: IndexType => Boolean): TimeSeries[PeriodFrequency.Month, T] = {
+  def filterIndex(f: YearMonth => Boolean): TimeSeries[PeriodFrequency.Month, T] = {
     val data1 = data.filter((d, _) => f(d))
     VectorEomSeries(data1)
   }

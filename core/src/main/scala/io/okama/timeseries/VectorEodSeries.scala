@@ -8,15 +8,13 @@ import com.github.tototoshi.csv._
 import scala.io.Source
 
 class VectorEodSeries[T](data: Vector[(LocalDate, T)]) extends TimeSeriesDay[T] {
-  type IndexType = LocalDate
-
   val frequency: PeriodFrequency = PeriodFrequency.day
 
   def values: Vector[T] = {
     data.map(_._2)
   }
 
-  def at(t: LocalDate): Option[T] = {
+  def at(t: I): Option[T] = {
     data.find((d, _) => d.equals(t)).map((_, v) => v)
   }
 
@@ -32,7 +30,7 @@ class VectorEodSeries[T](data: Vector[(LocalDate, T)]) extends TimeSeriesDay[T] 
     result.asInstanceOf[TimeSeries[V, T]]
   }
 
-  def index: TimeSeriesIndex = 
+  def index: TimeSeriesIndex[PeriodFrequency.Day] = 
     TimeSeriesIndex(frequency=PeriodFrequency.day, values=data.map(_._1))
 
   def map[V](f: T => V): TimeSeries[PeriodFrequency.Day, V] = { 
@@ -42,12 +40,13 @@ class VectorEodSeries[T](data: Vector[(LocalDate, T)]) extends TimeSeriesDay[T] 
   }
 
   def zip[V](ts: TimeSeries[PeriodFrequency.Day, V]): TimeSeries[PeriodFrequency.Day, (T, V)] = {
+    assert(index.eql(ts.index))
     val values1 = values.zip(ts.values)
     val data1 = index.values.zip(values1)
     VectorEodSeries(data1)
   }
 
-  def filterIndex(f: IndexType => Boolean): TimeSeries[PeriodFrequency.Day, T] = {
+  def filterIndex(f: LocalDate => Boolean): TimeSeries[PeriodFrequency.Day, T] = {
     val data1 = data.filter((d, _) => f(d))
     VectorEodSeries(data1)
   }
