@@ -3,10 +3,9 @@ package portfolio
 
 import unit._
 import source._
-import timeseries._
+import timeseries.{timeSeriesOps, _}
 
 import javax.inject._
-import Math._
 
 class CurrencyRegistry @Inject(
   cbrCurrencyRatesSource: CbrCurrencyRatesSource,
@@ -31,7 +30,7 @@ class CurrencyRegistry @Inject(
             val currencyConversionSymOpt = cbrCurrencyRatesSource.getFinancialSymbol(currencyConversion)
             currencyConversionSymOpt match {
               case Some(ccs) =>
-                div(1.0, ccs.closeValues)
+                1.0 / ccs.closeValues
 
               case None =>
                 ???
@@ -44,7 +43,7 @@ class CurrencyRegistry @Inject(
         val series2 = series1.filterIndex(x => conversionSeries1.at(x).isDefined)
         val conversionSeries2 = conversionSeries1.filterIndex(x => series1.at(x).isDefined)
 
-        mul(series2, conversionSeries2)
+        series2 * conversionSeries2
     }
   }
 
