@@ -22,4 +22,15 @@ given timeSeriesOps: {
     ts.map(_ / v)
   }
 
+  def (ts: TimeSeries[T, V]) alignToIndex[T <: PeriodFrequency, V] (index: TimeSeriesIndex[T])(given T) = {
+    var prev = ts.head._2
+    val data = index.values.map { i =>
+      val v = ts.at(i)
+      if (v.isDefined) {
+        prev = v.get
+      }
+      (i, prev)
+    }
+    TimeSeries(data)
+  }
 }

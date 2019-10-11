@@ -1,14 +1,14 @@
 package io.okama
 package timeseries
 
-import unit._
+import unit.{periodFrequencyDay, _}
 
 import org.joda.time.{convert => _, _}
 import com.github.tototoshi.csv._
 import scala.io.Source
 
 class VectorEodSeries[T](data: Vector[(LocalDate, T)]) extends TimeSeriesDay[T] {
-  val frequency: PeriodFrequency = PeriodFrequency.day
+  val frequency: PeriodFrequency.Day = PeriodFrequency.day
 
   def values: Vector[T] = {
     data.map(_._2)
@@ -31,7 +31,7 @@ class VectorEodSeries[T](data: Vector[(LocalDate, T)]) extends TimeSeriesDay[T] 
   }
 
   def index: TimeSeriesIndex[PeriodFrequency.Day] = 
-    TimeSeriesIndex(frequency=PeriodFrequency.day, values=data.map(_._1))
+    TimeSeriesIndex(values=data.map(_._1))
 
   def map[V](f: T => V): TimeSeries[PeriodFrequency.Day, V] = { 
     val values1 = values.map(f)
