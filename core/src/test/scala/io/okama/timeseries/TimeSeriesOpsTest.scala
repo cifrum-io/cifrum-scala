@@ -10,7 +10,10 @@ import org.joda.time.{convert => _, _}
 import verify._
 import timeseries.timeSeriesOps
 
-object AssetIntegrationTest extends BasicTestSuite {
+object TimeSeriesOpsTest extends BasicTestSuite {
+  given Eql[LocalDate, LocalDate] = Eql.derived
+  given Eql[(Int, Int), (Int, Int)] = Eql.derived
+
   def ld(s: String): LocalDate = {
     LocalDate.parse(s)
   }
@@ -26,5 +29,5 @@ object AssetIntegrationTest extends BasicTestSuite {
     val v2 = ts.alignToIndex(index=index).at(ld("2000-1-2")).equals(Option(1))
     assert(v2)
   }
-
+  
 }
