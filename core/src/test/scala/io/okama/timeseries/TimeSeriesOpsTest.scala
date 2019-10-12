@@ -29,5 +29,17 @@ object TimeSeriesOpsTest extends BasicTestSuite {
     val v2 = ts.alignToIndex(index=index).at(ld("2000-1-2")).equals(Option(1))
     assert(v2)
   }
+
+  test("leftJoin") {
+    val ts1 = VectorEodSeries(data=Vector((ld("2000-1-1"), 1), (ld("2000-1-3"), 3)))
+    val ts2 = VectorEodSeries(data=Vector((ld("2000-1-1"), 10), (ld("2000-1-2"), 20), (ld("2000-1-3"), 30)))
+    val ts = ts1.leftJoin(ts2)
+
+    val v1 = ts.index.values == Vector(ld("2000-1-1"), ld("2000-1-3"))
+    assert(v1)
+
+    val v2 = ts.values == Vector((1,10), (3, 30))
+    assert(v2)
+  }
   
 }
