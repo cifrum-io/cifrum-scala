@@ -30,8 +30,8 @@ object AssetIntegrationTest extends TestSuite[Common] {
       Slice.daily(startDate=startDate, endDate=endDate),
       currency=Currency.rub,
     )
-    assert(cv.index.values.head.equals(startDate))
-    assert(cv.index.values.last.equals(endDate))
+    assert(cv.index.values.head.isEqual(startDate))
+    assert(cv.index.values.last.isEqual(endDate))
 
     assert(abs(cv.at(endDate).get - 101.1700) < epsilon)
   }
@@ -45,7 +45,7 @@ object AssetIntegrationTest extends TestSuite[Common] {
       Slice.daily(startDate=startDate, endDate=endDate),
       currency=Currency.usd,
     )
-    assert(cv.index.values.head.isAfter(startDate))
+    assert(cv.index.values.head.isEqual(startDate))
     assert(cv.index.values.last.isEqual(endDate))
     assert(abs(cv.at(endDate).get * 32.6587 - 101.1700) < epsilon)
   }

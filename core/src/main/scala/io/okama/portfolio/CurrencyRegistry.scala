@@ -37,13 +37,9 @@ class CurrencyRegistry @Inject(
             }
         }
 
-        // TODO: fix the shortcut with Joins
-        val series1 = series.as(periodFrequency)
-        val conversionSeries1 = conversionSeries.as(periodFrequency)
-        val series2 = series1.filterIndex(x => conversionSeries1.at(x).isDefined)
-        val conversionSeries2 = conversionSeries1.filterIndex(x => series1.at(x).isDefined)
-
-        series2 * conversionSeries2
+        series.as(periodFrequency)
+              .leftJoin(conversionSeries.as(periodFrequency))
+              .map(_ * _)
     }
   }
 

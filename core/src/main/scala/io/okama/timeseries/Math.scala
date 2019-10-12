@@ -33,4 +33,10 @@ given timeSeriesOps: {
     }
     TimeSeries(data)
   }
+
+  def (lhs: TimeSeries[T, V1]) leftJoin[T <: PeriodFrequency, V1, V2] (rhs: TimeSeries[T, V2]) (given T): TimeSeries[T, (V1, V2)] = {
+    val rhs1 = rhs.alignToIndex(lhs.index)
+    lhs.zip(rhs1)
+  }
+
 }
