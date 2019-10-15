@@ -49,4 +49,32 @@ object AssetIntegrationTest extends TestSuite[Common] {
     assert(cv.index.values.last.isEqual(endDate))
     assert(abs(cv.at(endDate).get * 32.6587 - 101.1700) < epsilon)
   }
+
+  test("closeValues: slice and period conversion, but no currency conversion") { c =>
+    val asset: AssetMICEX = c.registry.get(AssetNamespace.micex, "SBER").get
+    assert(asset.symbol.currency == Currency.rub)
+    val startDate = YearMonth.parse("2012-4")
+    val endDate   = YearMonth.parse("2014-1")
+    val cv: TimeSeriesMonth[Double] = asset.closeValues(
+      Slice.monthly(startDate=startDate, endDate=endDate),
+      currency=Currency.rub,
+    )
+    assert(cv.index.values.head.isEqual(startDate))
+    assert(cv.index.values.last.isEqual(endDate))
+    assert(abs(cv.at(endDate).get - 94.7) < epsilon)
+  }
+
+  test("closeValues: slice, period conversion, and currency conversion") { c =>
+    val asset: AssetMICEX = c.registry.get(AssetNamespace.micex, "SBER").get
+    assert(asset.symbol.currency == Currency.rub)
+    val startDate = YearMonth.parse("2012-4")
+    val endDate   = YearMonth.parse("2014-1")
+    val cv: TimeSeriesMonth[Double] = asset.closeValues(
+      Slice.monthly(startDate=startDate, endDate=endDate),
+      currency=Currency.usd,
+    )
+    assert(cv.index.values.head.isEqual(startDate))
+    assert(cv.index.values.last.isEqual(endDate))
+    assert(abs(cv.at(endDate).get * 35.2448 - 94.7) < epsilon)
+  }
 }

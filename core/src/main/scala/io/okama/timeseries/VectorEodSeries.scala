@@ -23,7 +23,11 @@ class VectorEodSeries[T](data: Vector[(LocalDate, T)]) extends TimeSeriesDay[T] 
       case PeriodFrequency.day =>
         this
       case PeriodFrequency.month =>
-        ???
+        val data1 =
+          data.zip(data.drop(1))
+              .filter { case ((d1, v1), (d2, v2)) => d1.getMonthOfYear != d2.getMonthOfYear }
+              .map { case ((d, v), _) => (YearMonth(d), v) }
+        VectorEomSeries(data1)
       case PeriodFrequency.decade =>
         ???
     }
