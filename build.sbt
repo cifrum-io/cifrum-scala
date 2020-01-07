@@ -34,13 +34,11 @@ lazy val commonSettings = Seq(
   version := versions.thisBuild,
   organization := "io.okama",
 
-  homepage := Some(new URL("https://github.com/okama-io/yapo")),
+  homepage := Some(new URL("https://github.com/okama-io/yapo-scala")),
   startYear := Some(2017),
-  licenses := Seq("MIT" -> new URL("https://github.com/okama-io/yapo/blob/master/LICENSE")),
+  licenses := Seq("MIT" -> new URL("https://github.com/okama-io/yapo-scala/blob/master/LICENSE")),
   javacOptions ++= Seq(
     "-encoding", "UTF-8",
-    "-source", "1.8",
-    "-target", "1.8",
     "-Xlint:unchecked",
     "-Xlint:deprecation"),
   scalacOptions ++= List(
@@ -48,8 +46,7 @@ lazy val commonSettings = Seq(
     "-feature",
     "-unchecked",
     "-deprecation",
-    "-language:_",
-    "-target:jvm-1.8")
+    "-language:_")
 )
 
 lazy val `yapo-root` = project.in(file("."))
@@ -60,7 +57,7 @@ lazy val core = project.in(file("core"))
   .settings(commonSettings: _*)
   .settings(
     name := "yapo-core",
-    scalaVersion := "0.19.0-RC1",
+    scalaVersion := "0.20.0-RC1",
 
     libraryDependencies ++= Seq(
       dependencies.scalaCsv,
