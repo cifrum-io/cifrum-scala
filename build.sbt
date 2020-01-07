@@ -71,6 +71,22 @@ lazy val core = project.in(file("core"))
       dependencies.scalaVerify,
     ),
 
+    mainClass in assembly := Some("io.okama.grpc.GrpcRunner"),
+    test in assembly := {},
+    assemblyMergeStrategy in assembly := {
+      case PathList("META-INF", xs @ _*) =>
+        (xs map {_.toLowerCase}) match {
+          case "io.netty.versions.properties" :: xs => MergeStrategy.first
+          case "index.list" :: xs => MergeStrategy.first
+          case "notice.txt" :: xs => MergeStrategy.first
+          case "manifest.mf" :: xs => MergeStrategy.discard
+          case _ => MergeStrategy.deduplicate
+        }
+      case x =>
+        val oldStrategy = (assemblyMergeStrategy in assembly).value
+        oldStrategy(x)
+    },
+
     testFrameworks += new TestFramework("verify.runner.Framework")
   )
 
