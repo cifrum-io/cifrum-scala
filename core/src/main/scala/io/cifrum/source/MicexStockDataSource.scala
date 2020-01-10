@@ -1,4 +1,4 @@
-package io.okama
+package io.cifrum
 package source
 
 import unit._
@@ -62,8 +62,8 @@ class MicexStockDataSource() extends FinancialSymbolsSource[PeriodFrequency.Day,
 
 object MicexStockDataSource {
   private val conf: Config = ConfigFactory.load()
-  private val dataUrl: String = conf.getString("okama.data-url")
-  private val path: String = conf.getString("okama.micex_stocks-data-path")
+  private val dataUrl: String = conf.getString("cifrum.data-url")
+  private val path: String = conf.getString("cifrum.micex_stocks-data-path")
 
   private val metaInfoUrl: String = dataUrl + path + "/__index.csv"
   private[source] def closeValuesUrl(code: String): String =

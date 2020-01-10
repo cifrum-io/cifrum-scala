@@ -1,8 +1,8 @@
-package io.okama.grpc
+package io.cifrum.grpc
 
 import java.util.logging.Logger
 
-import io.okama.protos.hello.{GreeterGrpc, HelloReply, HelloRequest}
+import io.cifrum.protos.hello.{GreeterGrpc, HelloReply, HelloRequest}
 import io.grpc.{Server, ServerBuilder}
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -1,4 +1,4 @@
-package io.okama
+package io.cifrum
 package unit
 
 sealed trait Currency derives Eql {

@@ -1,4 +1,4 @@
-package io.okama
+package io.cifrum
 
 import com.google.inject.{Guice, AbstractModule}
 

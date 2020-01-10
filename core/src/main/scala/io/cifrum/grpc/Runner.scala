@@ -1,4 +1,4 @@
-package io.okama.grpc
+package io.cifrum.grpc
 
 import scala.concurrent.ExecutionContext
 

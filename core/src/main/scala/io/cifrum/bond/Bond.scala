@@ -1,5 +1,5 @@
 package io
-package okama
+package cifrum
 package bond
 
 import scala.util.Properties

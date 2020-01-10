@@ -1,4 +1,4 @@
-package io.okama
+package io.cifrum
 package source
 
 import unit._
@@ -63,8 +63,8 @@ class CbrCurrencyRatesSource() extends FinancialSymbolsSource[PeriodFrequency.Da
 
 object CbrCurrencyRatesSource {
   private val conf: Config = ConfigFactory.load()
-  private val dataUrl: String = conf.getString("okama.data-url")
-  private val path: String = conf.getString("okama.cbr_currency-data-path")
+  private val dataUrl: String = conf.getString("cifrum.data-url")
+  private val path: String = conf.getString("cifrum.cbr_currency-data-path")
 
   private val metaInfoUrl: String = dataUrl + path + "/__index.csv"
   private[source] def closeValuesUrl(code: String): String =

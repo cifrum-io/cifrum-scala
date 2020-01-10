@@ -1,10 +1,10 @@
-package io.okama
+package io.cifrum
 package bond
 
 import java.util.concurrent.TimeUnit
 
 import io.grpc.{ManagedChannel, ManagedChannelBuilder}
-import io.okama.protos.hello.{GreeterGrpc, HelloReply, HelloRequest}
+import io.cifrum.protos.hello.{GreeterGrpc, HelloReply, HelloRequest}
 import verify._
 import grpc.{HelloWorldServer, ServiceImpl}
 

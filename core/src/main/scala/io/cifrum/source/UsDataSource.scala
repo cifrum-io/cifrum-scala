@@ -1,4 +1,4 @@
-package io.okama
+package io.cifrum
 package source
 
 import unit._
@@ -68,8 +68,8 @@ class UsDataSource() extends FinancialSymbolsSource[PeriodFrequency.Month, TimeS
 
 object UsDataSource {
   private val conf: Config = ConfigFactory.load()
-  private val dataUrl: String = conf.getString("okama.data-url")
-  private val path: String = conf.getString("okama.us-data-path")
+  private val dataUrl: String = conf.getString("cifrum.data-url")
+  private val path: String = conf.getString("cifrum.us-data-path")
 
   private val metaInfoUrl: String = dataUrl + path
   private[source] def closeValuesUrl(code: String): String =

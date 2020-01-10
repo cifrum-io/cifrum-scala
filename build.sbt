@@ -11,7 +11,7 @@ lazy val versions = new {
 
 lazy val dependencies = new {
   // Dotty libs
-  val yapoInterface       = "io.okama"                      %  "yapo-protobuf-interface_2.13" % versions.thisBuild
+  val yapoInterface       = "io.cifrum"                     %  "yapo-protobuf-interface_2.13" % versions.thisBuild
 
   // Scala libs
   val scalaCsv            = "com.github.tototoshi"          %  "scala-csv_2.13"               % versions.scalaCsv
@@ -32,7 +32,7 @@ lazy val dependencies = new {
 lazy val commonSettings = Seq(
   description := "Flexible and easy-to-use Scala 3 library for analysis & manipulation with financial & economic data",
   version := versions.thisBuild,
-  organization := "io.okama",
+  organization := "io.cifrum",
 
   homepage := Some(new URL("https://github.com/okama-io/yapo-scala")),
   startYear := Some(2017),
@@ -71,7 +71,7 @@ lazy val core = project.in(file("core"))
       dependencies.scalaVerify,
     ),
 
-    mainClass in assembly := Some("io.okama.grpc.GrpcRunner"),
+    mainClass in assembly := Some("io.cifrum.grpc.GrpcRunner"),
     test in assembly := {},
     assemblyMergeStrategy in assembly := {
       case PathList("META-INF", xs @ _*) =>

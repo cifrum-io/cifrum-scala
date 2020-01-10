@@ -1,4 +1,4 @@
-package io.okama
+package io.cifrum
 package timeseries
 
 import portfolio.{AssetNamespace => ANS}

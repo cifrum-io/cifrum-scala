@@ -1,4 +1,4 @@
-package io.okama
+package io.cifrum
 package unit
 
 import timeseries._
