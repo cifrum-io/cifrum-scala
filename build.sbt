@@ -4,7 +4,7 @@ lazy val versions = new {
   lazy val jodaConvert        = "2.2.1"
   lazy val xirr               = "0.1"
   lazy val scalaCsv           = "1.3.6"
-  lazy val scalaVerify        = "0.2.0+11-a21f4546"
+  lazy val scalaVerify        = "0.2.0"
   lazy val typesafeConfig     = "1.3.4"
   lazy val guice              = "4.2.2"
 }
@@ -26,7 +26,7 @@ lazy val dependencies = new {
   val guice               = "com.google.inject"             %  "guice"                        % versions.guice
 
   // Test libs
-  val scalaVerify         = "com.eed3si9n.verify"           %  "verify_0.19"                  % versions.scalaVerify % Test
+  val scalaVerify         = "com.eed3si9n.verify"           %% "verify"                       % versions.scalaVerify % Test
 }
 
 lazy val commonSettings = Seq(
@@ -57,7 +57,7 @@ lazy val core = project.in(file("core"))
   .settings(commonSettings: _*)
   .settings(
     name := "yapo-core",
-    scalaVersion := "0.20.0-RC1",
+    scalaVersion := "0.21.0-RC1",
 
     libraryDependencies ++= Seq(
       dependencies.scalaCsv,
