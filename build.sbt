@@ -2,10 +2,10 @@ lazy val versions = new {
   lazy val thisBuild          = "0.1.0-SNAPSHOT"
   lazy val jodaTime           = "2.10.3"
   lazy val jodaConvert        = "2.2.1"
-  lazy val xirr               = "0.1"
+  lazy val xirr               = "1.1"
   lazy val scalaCsv           = "1.3.6"
   lazy val scalaVerify        = "0.2.0"
-  lazy val typesafeConfig     = "1.3.4"
+  lazy val typesafeConfig     = "1.4.0"
   lazy val guice              = "4.2.2"
 }
 
