@@ -1,7 +1,6 @@
 package io.cifrum
 package timeseries
 
-import portfolio.{AssetNamespace => ANS}
 import timeseries._
 import unit.{periodFrequencyDay, periodFrequencyMonth, PeriodFrequency => PF, _}
 

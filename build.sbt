@@ -1,5 +1,6 @@
 lazy val versions = new {
   lazy val thisBuild          = "0.1.0-SNAPSHOT"
+  lazy val dotty              = "0.21.0-RC1"
   lazy val jodaTime           = "2.10.3"
   lazy val jodaConvert        = "2.2.1"
   lazy val xirr               = "1.1"
@@ -51,23 +52,19 @@ lazy val commonSettings = Seq(
 
 lazy val `yapo-root` = project.in(file("."))
   .settings(commonSettings: _*)
-  .aggregate(core, interface)
+  .aggregate(core, timeSeries, interface)
 
 lazy val core = project.in(file("core"))
+  .dependsOn(timeSeries)
   .settings(commonSettings: _*)
   .settings(
     name := "yapo-core",
-    scalaVersion := "0.21.0-RC1",
+    scalaVersion := versions.dotty,
 
     libraryDependencies ++= Seq(
       dependencies.scalaCsv,
       dependencies.yapoInterface,
     ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
-      dependencies.guice,
-      dependencies.jodaTime,
-      dependencies.jodaConvert,
-      dependencies.typesafeConfig,
-      dependencies.xirr,
       dependencies.scalaVerify,
     ),
 
@@ -87,7 +84,27 @@ lazy val core = project.in(file("core"))
         oldStrategy(x)
     },
 
-    testFrameworks += new TestFramework("verify.runner.Framework")
+    testFrameworks += new TestFramework("verify.runner.Framework"),
+  )
+
+lazy val timeSeries = project.in(file("timeSeries"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "yapo-time-series",
+    scalaVersion := versions.dotty,
+
+    libraryDependencies ++= Seq(
+      dependencies.scalaCsv,
+    ) ++ Seq(
+      dependencies.guice,
+      dependencies.jodaTime,
+      dependencies.jodaConvert,
+      dependencies.typesafeConfig,
+      dependencies.xirr,
+      dependencies.scalaVerify,
+    ),
+
+    testFrameworks += new TestFramework("verify.runner.Framework"),
   )
 
 lazy val interface = project.in(file("protobuf-interface"))

@@ -2,7 +2,6 @@ package io.cifrum
 package portfolio
 
 import unit._
-import source._
 import timeseries._
 
 import javax.inject._

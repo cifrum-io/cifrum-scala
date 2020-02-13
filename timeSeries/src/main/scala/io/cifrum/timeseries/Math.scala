@@ -4,7 +4,6 @@ package timeseries
 import unit._
 
 import org.joda.time.{convert => _, _}
-import com.github.tototoshi.csv._
 import scala.io.Source
 
 trait TimeSeriesOps {

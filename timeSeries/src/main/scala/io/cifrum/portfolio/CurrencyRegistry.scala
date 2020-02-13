@@ -2,7 +2,7 @@ package io.cifrum
 package portfolio
 
 import unit._
-import source._
+import source.CbrCurrencyRatesSource
 import timeseries.{timeSeriesOps, _}
 
 import javax.inject._
