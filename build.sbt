@@ -12,7 +12,7 @@ lazy val versions = new {
 
 lazy val dependencies = new {
   // Dotty libs
-  val yapoInterface       = "io.cifrum"                     %  "yapo-protobuf-interface_2.13" % versions.thisBuild
+  val cifrumInterface     = "io.cifrum"                     %  "cifrum-protobuf-interface_2.13"    % versions.thisBuild
 
   // Scala libs
   val scalaCsv            = "com.github.tototoshi"          %  "scala-csv_2.13"               % versions.scalaCsv
@@ -35,9 +35,9 @@ lazy val commonSettings = Seq(
   version := versions.thisBuild,
   organization := "io.cifrum",
 
-  homepage := Some(new URL("https://github.com/okama-io/yapo-scala")),
+  homepage := Some(new URL("https://github.com/cifrum-io/cifrum-scala")),
   startYear := Some(2017),
-  licenses := Seq("MIT" -> new URL("https://github.com/okama-io/yapo-scala/blob/master/LICENSE")),
+  licenses := Seq("MIT" -> new URL("https://github.com/cifrum-io/cifrum-scala/blob/master/LICENSE")),
   javacOptions ++= Seq(
     "-encoding", "UTF-8",
     "-Xlint:unchecked",
@@ -50,20 +50,20 @@ lazy val commonSettings = Seq(
     "-language:_")
 )
 
-lazy val `yapo-root` = project.in(file("."))
+lazy val `cifrum-root` = project.in(file("."))
   .settings(commonSettings: _*)
-  .aggregate(core, timeSeries, interface)
+  .aggregate(core, lib, interface)
 
 lazy val core = project.in(file("core"))
-  .dependsOn(timeSeries)
+  .dependsOn(lib)
   .settings(commonSettings: _*)
   .settings(
-    name := "yapo-core",
+    name := "cifrum-core",
     scalaVersion := versions.dotty,
 
     libraryDependencies ++= Seq(
       dependencies.scalaCsv,
-      dependencies.yapoInterface,
+      dependencies.cifrumInterface,
     ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
       dependencies.scalaVerify,
     ),
@@ -87,15 +87,15 @@ lazy val core = project.in(file("core"))
     testFrameworks += new TestFramework("verify.runner.Framework"),
   )
 
-lazy val timeSeries = project.in(file("timeSeries"))
+lazy val lib = project.in(file("lib"))
   .settings(commonSettings: _*)
   .settings(
-    name := "yapo-time-series",
+    name := "cifrum-lib",
     scalaVersion := versions.dotty,
 
     libraryDependencies ++= Seq(
       dependencies.scalaCsv,
-    ) ++ Seq(
+    ).map(_.withDottyCompat(scalaVersion.value)) ++ Seq(
       dependencies.guice,
       dependencies.jodaTime,
       dependencies.jodaConvert,
@@ -111,7 +111,7 @@ lazy val interface = project.in(file("protobuf-interface"))
   .settings(commonSettings: _*)
   .settings(
     scalaVersion := "2.13.1",
-    name := "yapo-protobuf-interface",
+    name := "cifrum-protobuf-interface",
 
     PB.targets in Compile := Seq(
       scalapb.gen() -> (sourceManaged in Compile).value
